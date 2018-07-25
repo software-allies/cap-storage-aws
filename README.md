@@ -1,16 +1,16 @@
-#CAP STORAGE AWS 
+# CAP STORAGE AWS 
 
 CAP STORAGE AWS is a module for Angular, with this module you could upload images to **AWS S3** and use a list of the images that you have in your bucket.
 This module prover a service that for upload and get the images of AWS.
 
-**Installation of CAP STORAGE AWS**
+## **Installation of CAP STORAGE AWS**
 
 write the following command:
 ```
     npm install cap-storage-aws
 ```
 
-**Implementation into a module**
+## **Implementation into a module**
 For use this module go to app module and into the sections of import put the AWS module.
 This is a general configuration to use our module.
 **Example:**
@@ -24,7 +24,7 @@ CapStorageAWS.forRoot({
 })
 ```
 
-**Configuration AWS S3**
+## **Configuration AWS S3**
 We recommend create a specific folder into your bucket for save your images. In your bucket 
 go the section of **permissions**, after that, go to **CORS configuration** and write the following code:
 
@@ -45,7 +45,7 @@ go the section of **permissions**, after that, go to **CORS configuration** and 
     </CORSConfiguration>
 ```
 
-**HTML elements**
+## **HTML elements**
 If you want upload image, you should use the <photo-upload><photo-upload> tag. This tag provide an html that include a button to select your image, a preview section of the image that you want to upload, a progress bar and a button to upload the image.
 
 But if you want you see your image like a list you could use the tag <image-list></image-list>
@@ -56,6 +56,36 @@ But if you want you see your image like a list you could use the tag <image-list
     <photo-upload></photo-upload>
     <h1>Lists of images</h1>
     <image-list></image-list>
+```
+## **Services**
+This module contains a storage service, this services expone a method to upload images and get the images of the bucket.
+**Method getFiles**
+**Example to get images**
+```
+constructor( private _fileUpload: StorageService ) {
+        this.showFiles()
+    }
+    ngOnInit() {}
+
+    showFiles(){
+        this.images = this._fileUpload.getFiles();
+    }
+```
+**Method upload**
+The upload method receive 2 parameters:
+A file(image) to upload and a callback, this callback it's for the event On for know whent the image upload it's complete.
+```
+    upload(file:any, fn:any){
+
+    }
+
+The last step it's go to index.html and added the next code:
+```
+<script>
+    if (global === undefined) {
+      var global = window;
+    }
+</script>
 ```
 
 
