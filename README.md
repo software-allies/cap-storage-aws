@@ -78,8 +78,8 @@ A file(image) to upload and a callback, this callback it's for the event On for 
     upload(file:any, fn:any){
 
     }
-
-The last step it's go to index.html and added the next code:
+```
+**The last step it's go to index.html and added the next code:**
 ```
 <script>
     if (global === undefined) {
