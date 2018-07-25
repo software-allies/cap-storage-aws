@@ -1,0 +1,20 @@
+{
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "otherbuild": "rm -rf dist && tsc",
+    "transpile": "ngc",
+    "package": "rollup -c",
+    "minify": "uglifyjs dist/bundles/capstorageaws.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/capstorageaws.umd.min.js",
+    "build": "npm run transpile && npm run package && npm run minify"
+  },
+  "dependencies": {
+    "@angular/core": "5.2.11"
+  },
+  "devDependencies": {
+    "@angular/compiler": "5.2.11",
+    "@angular/compiler-cli": "5.2.11",
+    "rollup": "^0.62.0",
+    "typescript": "~2.7.2",
+    "uglify-js": "^3.4.2"
+  }
+}
