@@ -11,13 +11,15 @@
     "build": "npm run transpile && npm run package && npm run minify"
   },
   "dependencies": {
-    "@angular/core": "5.2.11"
+    "@angular/core": "5.2.11",
+    "aws-sdk": "^2.277.1"
   },
   "devDependencies": {
     "@angular/compiler": "5.2.11",
     "@angular/compiler-cli": "5.2.11",
     "rollup": "^0.62.0",
     "typescript": "~2.7.2",
-    "uglify-js": "^3.4.2"
+    "uglify-js": "^3.4.2",
+    "aws-sdk": "^2.277.1"
   }
 }
