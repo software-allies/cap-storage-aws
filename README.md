@@ -11,7 +11,10 @@ npm install cap-storage-aws
 
 ## **Implementation into a module**
 For use this module go to app module and into the sections of import put the AWS module.
-This is a general configuration to use our module.
+```
+import { CapStorageAWS } from 'cap-storage-aws';
+```
+After that, add into modules' array with your credentials.
 **Example:**
 ```
 CapStorageAWS.forRoot({
@@ -72,7 +75,7 @@ constructor( private _fileUpload: StorageService ) {
 ```
 **Method upload**
 The upload method receive 2 parameters:
-A file(image) to upload and a callback, this callback it's for the event On for know whent the image upload it's complete.
+A file(image) to upload and a callback, this callback it's for the event On for know when the image upload it's complete.
 ```
 upload(file:any, fn:any){
 
