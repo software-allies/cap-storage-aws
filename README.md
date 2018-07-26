@@ -1,13 +1,12 @@
 # CAP STORAGE AWS 
 
 CAP STORAGE AWS is a module for Angular, with this module you could upload images to **AWS S3** and use a list of the images that you have in your bucket.
-This module prover a service that for upload and get the images of AWS.
 
 ## **Installation of CAP STORAGE AWS**
 
 write the following command:
 ```
-    npm install cap-storage-aws
+npm install cap-storage-aws
 ```
 
 ## **Implementation into a module**
@@ -29,20 +28,20 @@ We recommend create a specific folder into your bucket for save your images. In 
 go the section of **permissions**, after that, go to **CORS configuration** and write the following code:
 
 ```   
-    <?xml version="1.0" encoding="UTF-8"?>
-    <CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-    <CORSRule>
-        <AllowedOrigin>*</AllowedOrigin>
-        <AllowedMethod>HEAD</AllowedMethod>
-        <AllowedMethod>GET</AllowedMethod>
-        <AllowedMethod>PUT</AllowedMethod>
-        <AllowedMethod>POST</AllowedMethod>
-        <AllowedMethod>DELETE</AllowedMethod>
-        <ExposeHeader>ETag</ExposeHeader>
-        <ExposeHeader>x-amz-meta-custom-header</ExposeHeader>
-        <AllowedHeader>*</AllowedHeader>
-    </CORSRule>
-    </CORSConfiguration>
+<?xml version="1.0" encoding="UTF-8"?>
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+<CORSRule>
+    <AllowedOrigin>*</AllowedOrigin>
+    <AllowedMethod>HEAD</AllowedMethod>
+    <AllowedMethod>GET</AllowedMethod>
+    <AllowedMethod>PUT</AllowedMethod>
+    <AllowedMethod>POST</AllowedMethod>
+    <AllowedMethod>DELETE</AllowedMethod>
+    <ExposeHeader>ETag</ExposeHeader>
+    <ExposeHeader>x-amz-meta-custom-header</ExposeHeader>
+    <AllowedHeader>*</AllowedHeader>
+</CORSRule>
+</CORSConfiguration>
 ```
 
 ## **HTML elements**
@@ -53,9 +52,9 @@ But if you want you see your image like a list you could use the tag <image-list
 
 **Example of implementation**
 ```
-    <photo-upload></photo-upload>
-    <h1>Lists of images</h1>
-    <image-list></image-list>
+<cap-upload></cap-upload>
+<h1>List of images</h1>
+<cap-img-list></cap-img-list>
 ```
 ## **Services**
 This module contains a storage service, this services expone a method to upload images and get the images of the bucket.
@@ -75,9 +74,9 @@ constructor( private _fileUpload: StorageService ) {
 The upload method receive 2 parameters:
 A file(image) to upload and a callback, this callback it's for the event On for know whent the image upload it's complete.
 ```
-    upload(file:any, fn:any){
+upload(file:any, fn:any){
 
-    }
+}
 ```
 **The last step it's go to index.html and added the next code:**
 ```
