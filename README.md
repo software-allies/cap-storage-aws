@@ -78,15 +78,7 @@ upload(file:any, fn:any){
 
 }
 ```
-**Note**
-When you're working with 
-```
-<script>
-    if (global === undefined) {
-      var global = window;
-    }
-</script>
-```
+
 
 
 
