@@ -37,9 +37,7 @@ go the section of **permissions**, after that, go to **CORS configuration** and 
     <AllowedOrigin>*</AllowedOrigin>
     <AllowedMethod>HEAD</AllowedMethod>
     <AllowedMethod>GET</AllowedMethod>
-    <AllowedMethod>PUT</AllowedMethod>
     <AllowedMethod>POST</AllowedMethod>
-    <AllowedMethod>DELETE</AllowedMethod>
     <ExposeHeader>ETag</ExposeHeader>
     <ExposeHeader>x-amz-meta-custom-header</ExposeHeader>
     <AllowedHeader>*</AllowedHeader>
@@ -48,10 +46,9 @@ go the section of **permissions**, after that, go to **CORS configuration** and 
 ```
 
 ## **HTML elements**
-If you want upload image, you should use the <photo-upload><photo-upload> tag. This tag provide an html that include a button to select your image, a preview section of the image that you want to upload, a progress bar and a button to upload the image.
+If you want upload image, you should use the <photo-upload> tag. This tag provide an html that include a button to select your image, a preview section of the image that you want to upload, a progress bar, and a button to upload the image.
 
-But if you want you see your image like a list you could use the tag <image-list></image-list>
-
+But if you want you see your image like a list you could use the tag <image-list>
 
 **Example of implementation**
 ```
@@ -81,7 +78,8 @@ upload(file:any, fn:any){
 
 }
 ```
-**The last step it's go to index.html and added the next code:**
+**Note**
+When you're working with 
 ```
 <script>
     if (global === undefined) {
