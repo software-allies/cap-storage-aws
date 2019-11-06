@@ -1,8 +1,28 @@
-# CAP STORAGE AWS 
+# `CAP STORAGE AWS` 
 
-CAP STORAGE AWS is a module for Angular, with this module you could upload images to **AWS S3** and use a list of the images that you have in your bucket.
+**`CAP STORAGE AWS`** is a module for **`Angular`**, with this module you can upload images to **`AWS S3`**.
 
-## **Installation of CAP STORAGE AWS**
+## **Previous requirements**
+**`CAP STORAGE AWS`** use bootstrap's classes. To be able to display the component in the right way, bootstrap should have been installed in the project. In case you don't have bootstrap installed, you can run the following command:
+```
+npm install bootstrap
+```
+One's that you installed bootstrap you have to configure the `angular.json` and write into `styles`
+```
+"styles": [
+  "node_modules/bootstrap/dist/css/bootstrap.min.css",
+  "styles.scss"
+]
+```
+
+## **`Important!`**
+Before to install the dependency you should have the following script into the polyfills.ts file:
+
+```
+(window as any).global = window;
+```
+
+## **Installation**
 
 write the following command:
 ```
@@ -10,12 +30,12 @@ npm install cap-storage-aws
 ```
 
 ## **Implementation into a module**
-For use this module go to app module and into the sections of import put the AWS module.
+To use this module go-to the app module and into the sections' import and put the AWS module.
 ```
 import { CapStorageAWS } from 'cap-storage-aws';
 ```
 After that, add into modules' array with your credentials.
-**Example:**
+**`Example:`**
 ```
 CapStorageAWS.forRoot({
     bucket: 'your-bocket',
@@ -27,7 +47,7 @@ CapStorageAWS.forRoot({
 ```
 
 ## **Configuration AWS S3**
-We recommend create a specific folder into your bucket for save your images. In your bucket 
+We recommend creating a specific folder into your bucket for save your images. In your bucket 
 go the section of **permissions**, after that, go to **CORS configuration** and write the following code:
 
 ```   
@@ -46,18 +66,20 @@ go the section of **permissions**, after that, go to **CORS configuration** and 
 ```
 
 ## **HTML elements**
-If you want upload image, you should use the <photo-upload> tag. This tag provide an html that include a button to select your image, a preview section of the image that you want to upload, a progress bar, and a button to upload the image.
+If you want to upload images, you should use the `<photo-upload>` tag. This tag provides an HTML that include a button to select your image, a preview section of the image that you want to upload, a progress bar, and a button to upload the image.
 
-But if you want you see your image like a list you could use the tag <image-list>
 
-**Example of implementation**
+**`Example of implementation`**
 ```
 <cap-upload></cap-upload>
-<h1>List of images</h1>
-<cap-img-list></cap-img-list>
+
 ```
+
+![Alt text](assets/images/cap-aws.gif?raw=true "example")
+
+
 ## **Services**
-This module contains a storage service, this services expone a method to upload images and get the images of the bucket.
+This module contains a storage service, this services expose a method to upload images and get the images of the bucket.
 **Method getFiles**
 **Example to get images**
 ```
@@ -66,12 +88,12 @@ constructor( private _fileUpload: StorageService ) {
     }
     ngOnInit() {}
 
-    showFiles(){
+    getFiles(){
         this.images = this._fileUpload.getFiles();
     }
 ```
 **Method upload**
-The upload method receive 2 parameters:
+The upload method receives 2 parameters:
 A file(image) to upload and a callback, this callback it's for the event On for know when the image upload it's complete.
 ```
 upload(file:any, fn:any){
