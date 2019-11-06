@@ -30,7 +30,7 @@ export class StorageService {
     upload(file:any, fn:any){
         const params = {
             Bucket: this.bucket,
-            Key: this.folder + '/'+ file.name,
+            Key: `${this.folder}/${file.name}`,
             Body: file,
             ACL: 'public-read'
           };

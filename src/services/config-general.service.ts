@@ -7,6 +7,7 @@ export interface IConfigService{
      region: string;
      folder: string;
 }
+
 @Injectable()
 
 export class ConfigService {
@@ -15,7 +16,7 @@ export class ConfigService {
     secretAccessKey: string;
     region: string;
     folder: string;
-
+    
     constructor(@Optional() config: IConfigService) {
         if (config) {
             this.bucket = config.bucket;
