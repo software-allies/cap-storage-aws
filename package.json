@@ -1,7 +1,26 @@
 {
-  "name": "cap-storage",
+  "name": "cap-storage-aws",
   "version": "3.0.2",
+  "description": "An amazing module for Angular using AWS S3.",
+  "main": "bundles/compoplace.umd.js",
+  "module": "index.js",
+  "typings": "index.d.ts",
+  "keywords": [
+    "angular",
+    "angular2",
+    "angular 2",
+    "angular4",
+    "AWS S3",
+    "Amazon",
+    "images",
+    "Upload file"
+  ],
   "author": "Diego SanMo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/software-allies/cap-storage-aws/tree/feature/cap-aws-angular"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "otherbuild": "rm -rf dist && tsc",
@@ -10,10 +29,25 @@
     "minify": "uglifyjs dist/bundles/capstorageaws.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/capstorageaws.umd.min.js",
     "build": "npm run transpile && npm run package && npm run minify && cp README.md dist/README.md && cp -r ./assets dist/assets"
   },
+  "homepage": "",
+  "bugs": {
+    "url": ""
+  },
   "dependencies": {
-    "@angular/core": "^8.2.13",
-    "rxjs": "^6.5.3",
-    "zone.js": "^0.9.1"
+    "@angular/compiler": "^8.2.13",
+    "@angular/compiler-cli": "^8.2.13",
+    "aws-sdk": "^2.564.0",
+    "rollup": "^0.62.0",
+    "typescript": "^3.5.1",
+    "uglify-js": "^3.4.2"
+  },
+  "peerDependencies": {
+    "@angular/compiler": "^8.2.13",
+    "@angular/compiler-cli": "^8.2.13",
+    "aws-sdk": "^2.564.0",
+    "rollup": "^0.62.0",
+    "typescript": "^3.5.1",
+    "uglify-js": "^3.4.2"
   },
   "devDependencies": {
     "@angular/compiler": "^8.2.13",

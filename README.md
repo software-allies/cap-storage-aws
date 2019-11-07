@@ -22,6 +22,10 @@ Before to install the dependency you should have the following script into the p
 (window as any).global = window;
 ```
 
+After that you may encounter compilation issues when using the typings provided by the SDK in an Angular project created using the Angular CLI.
+
+To resolve these issues, either add "types": ["node"] to the project's tsconfig.app.json file, or remove the "types" field entirely.
+
 ## **Installation**
 
 write the following command:
