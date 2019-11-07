@@ -1,9 +1,9 @@
-# `CAP STORAGE AWS` 
+# CAP STORAGE AWS 
 
-**`CAP STORAGE AWS`** is a module for **`Angular`**, with this module you can upload images to **`AWS S3`**.
+**CAP STORAGE AWS** is a module for **Angular**, with this module you can upload images to **AWS S3**.
 
 ## **Previous requirements**
-**`CAP STORAGE AWS`** use bootstrap's classes. To be able to display the component in the right way, bootstrap should have been installed in the project. In case you don't have bootstrap installed, you can run the following command:
+**CAP STORAGE AWS** use bootstrap's classes. To be able to display the component in the right way, bootstrap should have been installed in the project. In case you don't have bootstrap installed, you can run the following command:
 ```
 npm install bootstrap
 ```
@@ -35,7 +35,7 @@ To use this module go-to the app module and into the sections' import and put th
 import { CapStorageAWS } from 'cap-storage-aws';
 ```
 After that, add into modules' array with your credentials.
-**`Example:`**
+**Example:**
 ```
 CapStorageAWS.forRoot({
     bucket: 'your-bocket',
@@ -69,7 +69,7 @@ go the section of **permissions**, after that, go to **CORS configuration** and 
 If you want to upload images, you should use the `<photo-upload>` tag. This tag provides an HTML that include a button to select your image, a preview section of the image that you want to upload, a progress bar, and a button to upload the image.
 
 
-**`Example of implementation`**
+**Example of implementation**
 ```
 <cap-upload></cap-upload>
 
