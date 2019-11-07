@@ -8,7 +8,7 @@
     "transpile": "ngc",
     "package": "rollup -c",
     "minify": "uglifyjs dist/bundles/capstorageaws.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/capstorageaws.umd.min.js",
-    "build": "npm run transpile && npm run package && npm run minify && cp README.md dist/README.md"
+    "build": "npm run transpile && npm run package && npm run minify && cp README.md dist/README.md && cp -r ./assets dist/assets"
   },
   "dependencies": {
     "@angular/core": "^8.2.13",
