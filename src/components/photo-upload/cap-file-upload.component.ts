@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-// import { AlertController } from 'ionic-angular';
-
 import { StorageService } from '../../services/storage.service';
 
 
 @Component({
   selector: 'cap-upload',
-  template: `
+  template:
+    `
       <div class="row justify-content-md-center" *ngIf="selectedFile">
         <div class="col col-md-6" >
           <div class="card">
@@ -53,13 +52,13 @@ import { StorageService } from '../../services/storage.service';
     `,
   styles: [
     `
-            .imageNotFound {
-                background-color: gray;
-                width: 100%;
-                height: 300px;
-                color: gray;
-            }
-        `
+      .imageNotFound {
+        background-color: gray;
+        width: 100%;
+        height: 300px;
+        color: gray;
+      }
+    `
   ]
 })
 
@@ -70,7 +69,7 @@ export class CapFileUploadComponent implements OnInit {
   reader = new FileReader();
   isComplete: boolean = false;
   showAlert: boolean = false;
-  
+
   constructor(private uploadService: StorageService) { }
 
   ngOnInit() { }
@@ -107,5 +106,5 @@ export class CapFileUploadComponent implements OnInit {
     this.progressBar = 0;
     this.isComplete = false
   }
-
+  
 }
