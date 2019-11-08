@@ -37,6 +37,7 @@
     "@angular/compiler": "^8.2.13",
     "@angular/compiler-cli": "^8.2.13",
     "aws-sdk": "^2.564.0",
+    "ngx-file-drop": "^8.0.8",
     "rollup": "^0.62.0",
     "typescript": "^3.5.1",
     "uglify-js": "^3.4.2"
