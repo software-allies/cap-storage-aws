@@ -1,6 +1,6 @@
 {
   "name": "cap-storage-aws",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "An amazing module for Angular using AWS S3.",
   "main": "bundles/compoplace.umd.js",
   "module": "index.js",
@@ -13,7 +13,9 @@
     "AWS S3",
     "Amazon",
     "images",
-    "Upload file"
+    "Upload",
+    "Drag and drop",
+    "Files"
   ],
   "author": "Diego SanMo",
   "license": "MIT",
