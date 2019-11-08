@@ -7,18 +7,24 @@ import { ConfigService, IConfigService } from './services/config-general.service
 import { CommonModule } from '@angular/common';
 import { CapFileUploadComponent } from './components/photo-upload/cap-file-upload.component';
 import { CapShowImageComponent } from './components/show-photos/cap-show-image.component';
+import { CapFileUploadDragDropComponent } from './components/photo-upload/cap-file-upload-drag-drop.component';
+import { NgxFileDropModule } from 'ngx-file-drop';
+
 @NgModule({
     imports: [
         CommonModule,
+        NgxFileDropModule
     ],
     exports: [
         CommonModule,
         CapFileUploadComponent,
-        CapShowImageComponent
+        CapShowImageComponent,
+        CapFileUploadDragDropComponent
     ],
     declarations: [
         CapFileUploadComponent,
-        CapShowImageComponent
+        CapShowImageComponent,
+        CapFileUploadDragDropComponent
     ],
     providers: [StorageService],
     schemas: [
