@@ -1,9 +1,10 @@
-# CAP STORAGE AWS 
+# CAP STORAGE AWS [![Generic badge](https://img.shields.io/badge/CAP-Active-<COLOR>.svg)](https://shields.io/)
+
 
 **CAP STORAGE AWS** is a module for **Angular**, with this module you can upload images to **AWS S3**.
 
 ## **Previous requirements**
-**CAP STORAGE AWS** use bootstrap's classes. To be able to display the component in the right way, bootstrap should have been installed in the project. In case you don't have bootstrap installed, you can run the following command:
+**CAP STORAGE AWS** use bootstrap's classes. To be able to display the component in the right way, bootstrap should have been installed in the project. In case you don't have bootstrap installed, you can run the following command or read their [documentation](https://getbootstrap.com/docs/4.3/getting-started/download/):
 ```
 npm install bootstrap
 ```
@@ -69,17 +70,28 @@ go the section of **permissions**, after that, go to **CORS configuration** and 
 </CORSConfiguration>
 ```
 
-## **HTML elements**
-If you want to upload images, you should use the `<photo-upload>` tag. This tag provides an HTML that include a button to select your image, a preview section of the image that you want to upload, a progress bar, and a button to upload the image.
+## **HTML tags**
 
+## **Cap Upload**
+Tag to upload images into an Amazon bucket.
 
 **Example of implementation**
 ```
 <cap-upload></cap-upload>
-
 ```
 
 ![Alt text](assets/images/cap-aws.gif?raw=true "example")
+
+## **Cap Upload Drag and Drop**
+This tag use an external dependency called [ngx-file-drop](https://www.npmjs.com/package/ngx-file-drop).
+Tag to upload any kind of file
+**Example of implementation**
+```
+<cap-upload-drag-drop></cap-upload-drag-drop>
+
+```
+
+![Alt text](assets/images/cap-aws-drag-drop.gif?raw=true "example")
 
 
 ## **Services**
@@ -87,6 +99,9 @@ This module contains a storage service, this services expose a method to upload 
 **Method getFiles**
 **Example to get images**
 ```
+import { StorageService } from 'cap-storage-aws/src/services/storage.service';
+
+
 constructor( private _fileUpload: StorageService ) {
         this.showFiles()
     }
