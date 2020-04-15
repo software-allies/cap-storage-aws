@@ -1,17 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
 import { StorageService } from '../../services/storage.service';
-
-export interface IFile {
-  sizeAux?: string;
-  lastModified?: number; //1571953485234
-  lastModifiedDate?: any;//Thu Oct 24 2019 16:44:45 GMT-0500 (Central Daylight Time) {}
-  name?: string;//"Screen Shot 2019-10-24 at 4.44.36 PM.png"
-  size?: number;//486168
-  type?: string;
-  webkitRelativePath?: any;
-  progressBar?: number;
-}
+import { IFile, ISession, IObjField } from '../../interfaces/interface';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'cap-upload-drag-drop',
@@ -19,7 +10,7 @@ export interface IFile {
     `
       <div class="row justify-content-md-center">
         <div class="col col-md-8">
-          <div class="center">
+          <div class="center mt-5">
             <ngx-file-drop 
               dropZoneLabel="Drop files here" 
               (onFileDrop)="dropped($event)" 
@@ -77,16 +68,26 @@ export interface IFile {
 })
 
 export class CapFileUploadDragDropComponent implements OnInit {
+  @Input() session: ISession = {
+    token: '',
+    authId: ''
+  };
+
+  @Input() fields: IObjField[] = [];
+
   reader = new FileReader();
   filesNFormat: IFile[] = [];
   public files: NgxFileDropEntry[] = [];
 
-  constructor(private uploadService: StorageService) { }
+  constructor(private uploadService: StorageService) {
+
+    console.log('session: ', this.session);
+  }
 
   ngOnInit() { }
 
   upload(file: any) {
-    this.uploadService.upload(file, (progress: any) => {
+    this.uploadService.upload(file, this.fields, this.session, (progress: any) => {
       file.progressBar = Math.round((progress.loaded * 100) / progress.total);
     });
   }

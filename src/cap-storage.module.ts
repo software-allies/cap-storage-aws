@@ -1,19 +1,29 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ModuleWithProviders } from '@angular/compiler/src/core';
+import { CommonModule } from '@angular/common';
 
 import { StorageService } from './services/storage.service';
+import { ConfigService } from './services/config-general.service';
 
-import { ModuleWithProviders } from '@angular/compiler/src/core';
-import { ConfigService, IConfigService } from './services/config-general.service';
-import { CommonModule } from '@angular/common';
 import { CapFileUploadComponent } from './components/photo-upload/cap-file-upload.component';
 import { CapShowImageComponent } from './components/show-photos/cap-show-image.component';
 import { CapFileUploadDragDropComponent } from './components/photo-upload/cap-file-upload-drag-drop.component';
+
 import { NgxFileDropModule } from 'ngx-file-drop';
+import { HttpClientModule } from '@angular/common/http';
+
+import { awsCredentials } from './interfaces/interface';
+
+import { SimpleNotificationsModule } from 'angular2-notifications';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
     CommonModule,
-    NgxFileDropModule
+    NgxFileDropModule,
+    HttpClientModule,
+    SimpleNotificationsModule.forRoot(),
+    BrowserAnimationsModule
   ],
   exports: [
     CommonModule,
@@ -32,7 +42,7 @@ import { NgxFileDropModule } from 'ngx-file-drop';
   ]
 })
 export class CapStorageAWS {
-  static forRoot(config: IConfigService): ModuleWithProviders {
+  static forRoot(config: awsCredentials): ModuleWithProviders {
     return {
       ngModule: CapStorageAWS,
       providers: [

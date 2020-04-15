@@ -36,14 +36,18 @@
     "url": ""
   },
   "dependencies": {
+    "@angular/animations": "^9.1.1",
     "@angular/compiler": "^8.2.13",
     "@angular/compiler-cli": "^8.2.13",
     "@angular/fire": "^5.2.1",
     "aws-sdk": "^2.564.0",
     "ngx-file-drop": "^8.0.8",
     "rollup": "^0.62.0",
+    "sweetalert2": "^9.10.12",
+    "toastr": "^2.1.4",
     "typescript": "^3.5.1",
-    "uglify-js": "^3.4.2"
+    "uglify-js": "^3.4.2",
+    "uuid": "^7.0.3"
   },
   "peerDependencies": {
     "@angular/compiler": "^8.2.13",
@@ -51,14 +55,17 @@
     "aws-sdk": "^2.564.0",
     "rollup": "^0.62.0",
     "typescript": "^3.5.1",
-    "uglify-js": "^3.4.2"
+    "uglify-js": "^3.4.2",
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
     "@angular/compiler": "^8.2.13",
     "@angular/compiler-cli": "^8.2.13",
+    "@types/uuid": "^7.0.2",
     "aws-sdk": "^2.564.0",
     "rollup": "^0.62.0",
     "typescript": "^3.5.1",
-    "uglify-js": "^3.4.2"
+    "uglify-js": "^3.4.2",
+    "uuid": "^7.0.3"
   }
 }
