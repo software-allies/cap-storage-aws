@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { StorageService } from '../../services/storage.service';
 import { ISession, IObjField } from '../../interfaces/interface';
-import { NotificationsService } from 'angular2-notifications';
 
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'cap-upload',
@@ -34,9 +34,6 @@ import { NotificationsService } from 'angular2-notifications';
                   <button class="btn btn-primary btn-block" [disabled]="!selectedFile || progressBar === 100" (click)="upload()">Upload</button>
                   <button class="btn btn-danger btn-block" [disabled]="!isComplete" (click)="cleanData()">Clean data</button>
                   
-                  <div class="alert alert-success my-3" role="alert" *ngIf="showAlert">
-                    Success upload!
-                  </div>
                 </div>
               </div>
             </div>
@@ -84,18 +81,8 @@ export class CapFileUploadComponent implements OnInit {
   selectedFile: any;
   reader = new FileReader();
   isComplete: boolean = false;
-  showAlert: boolean = false;
 
-  options = {
-    position: ["bottom", "left"],
-    timeOut: 5000,
-    lastOnBottom: true
-  }
-
-  constructor(private uploadService: StorageService, private _service: NotificationsService) {
-    
-    console.log('this.session: ', this.session);
-   }
+  constructor(private uploadService: StorageService) { }
 
   ngOnInit() { }
 
@@ -104,14 +91,13 @@ export class CapFileUploadComponent implements OnInit {
     const file = this.selectedFile.item(0);
     this.uploadService.upload(file, this.fields, this.session, (progress: any) => {
       this.progressBar = Math.round((progress.loaded * 100) / progress.total);
-      if (progress.loaded == progress.total) {
-        this.showAlert = true;
-        
-        setTimeout(() => {
-          this.showAlert = false
-          this.isComplete = true
-        }, 2000)
-      }
+      // if (progress.loaded == progress.total) {
+      //   Swal.fire(
+      //     'Successful!',
+      //     'The file was successfully saved!',
+      //     'success'
+      //   );
+      // }
     });
   }
 
