@@ -47,9 +47,13 @@ CapStorageAWS.forRoot({
     accessKeyId: 'your-accessKeyID',
     secretAccessKey: 'your-secretAccessKey',
     region: 'your-region',
-    folder: 'your-folder'
+    folder: 'your-folder',
+    endpoint: 'endpoint' 
 })
 ```
+
+### Note
+The endopoint it's optional, if you don't want to save the data into a DB it's not need it into the forRoot.
 
 ## **Configuration AWS S3**
 We recommend creating a specific folder into your bucket for save your images. In your bucket 
@@ -93,6 +97,89 @@ Tag to upload any kind of file
 
 ![Alt text](assets/images/cap-aws-drag-drop.gif?raw=true "example")
 
+## **Inputs**
+**[session]**
+Receives 
+
+**[fields]**
+Receives an object array with the following structure: 
+```
+[
+  {
+    name: string;
+    association: string;
+    value?: any;
+  }
+]
+```
+**name:** It's the name of the field that makes reference on your DB.
+
+**association:** It's the reference of the data exposed for the module, it could be **id**, **name** or **url**. In case that you don't want an assosiation with data exposed you could use **none**. 
+
+**value:**
+By the way if you want to save a specific information related with the field you are able to use the property **value**.
+
+**Example**
+
+```
+fieldsDB = [
+    {
+      name: 'SACAP__UUID__c',
+      association: 'id'
+    },
+    {
+      name: 'SACAP__CAP_User__c',
+      association: 'none',
+      value: '2'
+    },
+    {
+      name: 'SACAP__Name__c',
+      association: 'name'
+    },
+    {
+      name: 'SACAP__URL__c',
+      association: 'url'
+    }
+  ]
+```
+**Full Example**
+
+app.component.html
+```
+<cap-upload [session]="dataSession" [fields]="dataFields"></cap-upload>
+
+
+<cap-upload-drag-drop [session]="dataSession" [fields]="dataFields"></cap-upload-drag-drop>
+```
+
+app.component.ts
+```
+export class AppComponent {
+  title = 'aws-request';
+  dataSession: any = {}
+  dataFields = [
+    {
+      name: 'SACAP__UUID__c',
+      association: 'id'
+    },
+    {
+      name: 'SACAP__CAP_User__c',
+      association: 'none',
+      value: ''
+    },
+    {
+      name: 'SACAP__Name__c',
+      association: 'name'
+    },
+    {
+      name: 'SACAP__URL__c',
+      association: 'url'
+    }
+  ]
+  constructor(private auth: AuthenticationService) {
+    this.dataSession.token = token;
+  }
+```
 
 ## **Services**
 This module contains a storage service, this services expose a method to upload images and get the images of the bucket.
