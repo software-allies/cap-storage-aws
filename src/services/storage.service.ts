@@ -5,7 +5,7 @@ import { FileUpload } from '../models/fileUploads.class';
 import { ConfigService } from '../services/config-general.service';
 import { RequestService } from '../services/request.service';
 
-import { IObjField } from '../interfaces/interface';
+import { IDbFields } from '../interfaces/interface';
 
 import Swal from 'sweetalert2';
 
@@ -37,7 +37,7 @@ export class StorageService {
     })
   }
 
-  upload(file: any, fields: Array<IObjField>, credentials: any, fn: any) {
+  upload(file: any, fields: IDbFields[], token: any, fn: any) {
     const params = {
       Bucket: this.bucket,
       Key: `${this.folder}/${file.name}`,
@@ -45,9 +45,9 @@ export class StorageService {
       ACL: 'public-read'
     };
 
-    this.bucketConfig.upload(params, (err: any, data: any) => {
+    this.bucketConfig.upload(params, async (err: any, data: any) => {
       if (err) {
-        if (this.endpoint === '' && credentials.token === '') {
+        if (this.endpoint === '' && token === '') {
           console.log('There was an error uploading your file: ', err);
           Swal.fire(
             `${err.statusText} status ${err.status}`,
@@ -57,15 +57,8 @@ export class StorageService {
           return false;
         }
       }
-      if (this.endpoint) this.requestService.createFileRecord(data, fields, credentials);
-      else {
-        Swal.fire(
-          'Successful!',
-          'The file was successfully saved!',
-          'success'
-        );
-        return true;
-      }
+      if (this.endpoint) this.requestService.createFileRecord(data, fields, token);
+
     }).on('httpUploadProgress', fn);
   }
 

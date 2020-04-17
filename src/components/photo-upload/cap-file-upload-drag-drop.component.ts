@@ -1,8 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
 import { StorageService } from '../../services/storage.service';
-import { IFile, ISession, IObjField } from '../../interfaces/interface';
-import { NotificationsService } from 'angular2-notifications';
+import { IFile, IDbFields, ILocalStorage } from '../../interfaces/interface';
 
 @Component({
   selector: 'cap-upload-drag-drop',
@@ -68,26 +67,41 @@ import { NotificationsService } from 'angular2-notifications';
 })
 
 export class CapFileUploadDragDropComponent implements OnInit {
-  @Input() session: ISession = {
-    token: '',
-    authId: ''
+  @Input() token: string = '';
+  @Input() fields: IDbFields[] = [];
+  @Input() localStorageRef: ILocalStorage = {
+    key: '',
+    reference: ''
   };
-
-  @Input() fields: IObjField[] = [];
 
   reader = new FileReader();
   filesNFormat: IFile[] = [];
+  tokenRef: string;
+
   public files: NgxFileDropEntry[] = [];
 
   constructor(private uploadService: StorageService) {
+    if (this.localStorageRef.key !== '') {
+      // Saving the information into the dataLS variable (Data LocalStorage)
+      let dataLS: any = localStorage.getItem(`${this.localStorageRef.key}`);
 
-    console.log('session: ', this.session);
+      // Converting the response into the objLocal (objectLocal) that makes references 
+      // to the Data from the local storage
+      let objLocal = JSON.parse(dataLS);
+
+      // Saving the token into the variable token
+      this.tokenRef = objLocal[`${this.localStorageRef.reference}`];
+    } else {
+      if (this.token.length > 0) {
+        this.tokenRef = this.token;
+      }
+    }
   }
 
   ngOnInit() { }
 
   upload(file: any) {
-    this.uploadService.upload(file, this.fields, this.session, (progress: any) => {
+    this.uploadService.upload(file, this.fields, this.tokenRef, (progress: any) => {
       file.progressBar = Math.round((progress.loaded * 100) / progress.total);
     });
   }
@@ -107,7 +121,6 @@ export class CapFileUploadDragDropComponent implements OnInit {
           fileToUpload = file;
           fileToUpload.progressBar = 0;
           fileToUpload.sizeAux = this.formatFileSize(fileToUpload.size)
-          console.log('fileToUpload: ', fileToUpload);
           if (fileToUpload !== undefined) {
             this.filesNFormat.push(fileToUpload)
           }

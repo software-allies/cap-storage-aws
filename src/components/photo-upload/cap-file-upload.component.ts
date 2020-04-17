@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { StorageService } from '../../services/storage.service';
-import { ISession, IObjField } from '../../interfaces/interface';
+import { IDbFields, ILocalStorage } from '../../interfaces/interface';
 
 import Swal from 'sweetalert2';
 
@@ -70,11 +70,12 @@ import Swal from 'sweetalert2';
 })
 
 export class CapFileUploadComponent implements OnInit {
-  @Input() session: ISession = {
-    token: '',
-    authId: ''
+  @Input() token: string = '';
+  @Input() fields: IDbFields[] = [];
+  @Input() localStorageRef: ILocalStorage = {
+    key: '',
+    reference: ''
   };
-  @Input() fields: IObjField[] = [];
 
   totalSize: any;
   progressBar: number = 0;
@@ -82,30 +83,40 @@ export class CapFileUploadComponent implements OnInit {
   reader = new FileReader();
   isComplete: boolean = false;
 
-  constructor(private uploadService: StorageService) { }
+  tokenRef: string;
 
-  ngOnInit() { }
+  constructor(private uploadService: StorageService) {
+
+  }
+
+  ngOnInit() {
+    if (this.localStorageRef.key !== '') {
+      // Saving the information into the dataLS variable (Data LocalStorage)
+      let dataLS: any = localStorage.getItem(`${this.localStorageRef.key}`);
+
+      // Converting the response into the objLocal (objectLocal) that makes references 
+      // to the Data from the local storage
+      let objLocal = JSON.parse(dataLS);
+
+      // Saving the token into the variable token
+      this.tokenRef = objLocal[`${this.localStorageRef.reference}`];
+    } else {
+      if (this.token.length > 0) {
+        this.tokenRef = this.token;
+      }
+    }
+  }
 
   upload() {
 
     const file = this.selectedFile.item(0);
-    this.uploadService.upload(file, this.fields, this.session, (progress: any) => {
+    this.uploadService.upload(file, this.fields, this.tokenRef, (progress: any) => {
       this.progressBar = Math.round((progress.loaded * 100) / progress.total);
-      // if (progress.loaded == progress.total) {
-      //   Swal.fire(
-      //     'Successful!',
-      //     'The file was successfully saved!',
-      //     'success'
-      //   );
-      // }
     });
   }
 
   selectFile(event: any) {
-
     this.selectedFile = event.target.files;
-
-
     this.reader.onload = (event: any) => {
       const image: any = document.getElementById("image");
       image.src = event.target.result;

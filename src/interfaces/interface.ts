@@ -1,3 +1,4 @@
+
 export interface awsCredentials {
   bucket: string;
   accessKeyId: string;
@@ -5,7 +6,7 @@ export interface awsCredentials {
   region: string;
   folder: string;
   endpoint?: string;
-}
+};
 
 export interface IFile {
   sizeAux?: string;
@@ -16,15 +17,26 @@ export interface IFile {
   type?: string;
   webkitRelativePath?: any;
   progressBar?: number;
-}
+};
 
-export interface ISession {
-  token: string;
-  authId: string;
-}
-
-export interface IObjField {
+/**
+  * IDbFields save the fields that it's going to save the data related with the AWS file.
+  * @param name Field's name.
+  * @param association association's type. It could be 'id', 'name', 'url' or 'none'.
+  * @param value? Value or the field that has 'none' association.
+*/
+export interface IDbFields {
   name: string;
   association: string;
   value?: any;
-}
+};
+
+/**
+  * LocalStorage interface.
+  * @param key Name of the object that makes references to yout localStorage Data
+  * @param reference Name of the property that contains the token 
+*/
+export interface ILocalStorage {
+  key: string;
+  reference: string;
+};
