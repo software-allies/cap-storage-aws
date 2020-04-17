@@ -1,15 +1,18 @@
 # CAP STORAGE AWS [![Generic badge](https://img.shields.io/badge/CAP-Active-<COLOR>.svg)](https://shields.io/)
 
-
 **CAP STORAGE AWS** is a module for **Angular**, with this module you can upload images to **AWS S3**.
 
 ## **Previous requirements**
+
 **CAP STORAGE AWS** use bootstrap's classes. To be able to display the component in the right way, bootstrap should have been installed in the project. In case you don't have bootstrap installed, you can run the following command or read their [documentation](https://getbootstrap.com/docs/4.3/getting-started/download/):
-```
+
+``` 
 npm install bootstrap
 ```
-One's that you installed bootstrap you have to configure the `angular.json` and write into `styles`
-```
+
+One's that you installed bootstrap you have to configure the `angular.json` and write into `styles` 
+
+``` 
 "styles": [
   "node_modules/bootstrap/dist/css/bootstrap.min.css",
   "styles.scss"
@@ -17,9 +20,10 @@ One's that you installed bootstrap you have to configure the `angular.json` and 
 ```
 
 ## **`Important!`**
+
 Before to install the dependency you should have the following script into the polyfills.ts file:
 
-```
+``` 
 (window as any).global = window;
 ```
 
@@ -30,18 +34,23 @@ To resolve these issues, either add "types": ["node"] to the project's tsconfig.
 ## **Installation**
 
 write the following command:
-```
+
+``` 
 npm install cap-storage-aws
 ```
 
 ## **Implementation into a module**
+
 To use this module go-to the app module and into the sections' import and put the AWS module.
-```
+
+``` 
 import { CapStorageAWS } from 'cap-storage-aws';
 ```
+
 After that, add into modules' array with your credentials.
 **Example:**
-```
+
+``` 
 CapStorageAWS.forRoot({
     bucket: 'your-bocket',
     accessKeyId: 'your-accessKeyID',
@@ -53,13 +62,15 @@ CapStorageAWS.forRoot({
 ```
 
 ### Note
+
 The endopoint it's optional, if you don't want to save the data into a DB it's not need it into the forRoot.
 
 ## **Configuration AWS S3**
+
 We recommend creating a specific folder into your bucket for save your images. In your bucket 
 go the section of **permissions**, after that, go to **CORS configuration** and write the following code:
 
-```   
+``` 
 <?xml version="1.0" encoding="UTF-8"?>
 <CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
 <CORSRule>
@@ -80,17 +91,20 @@ go the section of **permissions**, after that, go to **CORS configuration** and 
 Tag to upload images into an Amazon bucket.
 
 **Example of implementation**
-```
+
+``` 
 <cap-upload></cap-upload>
 ```
 
 ![Alt text](assets/images/cap-aws.gif?raw=true "example")
 
 ## **Cap Upload Drag and Drop**
+
 This tag use an external dependency called [ngx-file-drop](https://www.npmjs.com/package/ngx-file-drop).
 Tag to upload any kind of file
 **Example of implementation**
-```
+
+``` 
 <cap-upload-drag-drop></cap-upload-drag-drop>
 
 ```
@@ -98,12 +112,18 @@ Tag to upload any kind of file
 ![Alt text](assets/images/cap-aws-drag-drop.gif?raw=true "example")
 
 ## **Inputs**
-**[session]**
-Receives 
 
-**[fields]**
-Receives an object array with the following structure: 
-```
+**fields**
+| Param | Description |
+| --- | --- |
+| name | It's the name of the field that makes reference on your DB.|
+| association | It's the reference of the data exposed for the module, it could be **id**, **name** or **url**. In case that you don't want an assosiation with data exposed you could use **none**.|
+| value | Value or the field that has 'none' association.|
+
+ 
+*Structure*: 
+
+``` 
 [
   {
     name: string;
@@ -112,82 +132,102 @@ Receives an object array with the following structure:
   }
 ]
 ```
-**name:** It's the name of the field that makes reference on your DB.
-
-**association:** It's the reference of the data exposed for the module, it could be **id**, **name** or **url**. In case that you don't want an assosiation with data exposed you could use **none**. 
-
-**value:**
-By the way if you want to save a specific information related with the field you are able to use the property **value**.
 
 **Example**
 
-```
-fieldsDB = [
-    {
-      name: 'SACAP__UUID__c',
-      association: 'id'
-    },
-    {
-      name: 'SACAP__CAP_User__c',
-      association: 'none',
-      value: '2'
-    },
-    {
-      name: 'SACAP__Name__c',
-      association: 'name'
-    },
-    {
-      name: 'SACAP__URL__c',
-      association: 'url'
-    }
-  ]
-```
-**Full Example**
-
 app.component.html
-```
-<cap-upload [session]="dataSession" [fields]="dataFields"></cap-upload>
 
+``` 
+<cap-upload [fields]="dbFields"></cap-upload>
 
-<cap-upload-drag-drop [session]="dataSession" [fields]="dataFields"></cap-upload-drag-drop>
+<cap-upload-drag-drop [fields]="dbFields"></cap-upload-drag-drop>
 ```
 
 app.component.ts
+
+``` 
+let aux: IDbFields[] = [
+      {
+        name: 'SACAP__UUID__c',
+        association: 'id'
+      },
+      {
+        name: 'SACAP__URL__c',
+        association: 'url',
+      },
+      {
+        name: 'SACAP__Name__c',
+        association: 'name',
+      },
+      {
+        name: 'SACAP__CAP_User__c__SACAP__UUID__c',
+        association: 'none',
+        value: '12'
+      },
+    ]
+    this.dbFields = [...aux]
 ```
-export class AppComponent {
-  title = 'aws-request';
-  dataSession: any = {}
-  dataFields = [
-    {
-      name: 'SACAP__UUID__c',
-      association: 'id'
-    },
-    {
-      name: 'SACAP__CAP_User__c',
-      association: 'none',
-      value: ''
-    },
-    {
-      name: 'SACAP__Name__c',
-      association: 'name'
-    },
-    {
-      name: 'SACAP__URL__c',
-      association: 'url'
-    }
-  ]
-  constructor(private auth: AuthenticationService) {
-    this.dataSession.token = token;
-  }
+
+**token**
+| Param | Description |
+| --- | --- |
+| token | Recives the token to make the http request.|
+
+**Example**
+
+app.component.html
+
+``` 
+<cap-upload [token]="token"></cap-upload>
+
+<cap-upload-drag-drop [token]="token"></cap-upload-drag-drop>
+```
+
+app.component.ts
+
+**localStorageRef**
+| Param | Description |
+| --- | --- |
+| key | Object name's that has the credentials saved into the localStorage. |
+| reference | Property name's that makes reference to the token. |
+
+ 
+*Structure*: 
+
+``` 
+{
+  key: string;
+  reference: string;
+}
+```
+
+**Example**
+
+app.component.html
+
+``` 
+<cap-upload [localStorageRef]="localStorage"></cap-upload>
+
+<cap-upload-drag-drop [localStorageRef]="localStorage"></cap-upload-drag-drop>
+```
+
+app.component.ts
+
+``` 
+localStorage: ILocalStorage = {
+    key: 'User',
+    reference: 'token'
+};
 ```
 
 ## **Services**
+
 This module contains a storage service, this services expose a method to upload images and get the images of the bucket.
 **Method getFiles**
 **Example to get images**
-```
-import { StorageService } from 'cap-storage-aws/src/services/storage.service';
 
+``` 
+import { StorageService } from 'cap-storage-aws/src/services/storage.service';
 
 constructor( private _fileUpload: StorageService ) {
         this.showFiles()
@@ -198,15 +238,14 @@ constructor( private _fileUpload: StorageService ) {
         this.images = this._fileUpload.getFiles();
     }
 ```
+
 **Method upload**
 The upload method receives 2 parameters:
 A file(image) to upload and a callback, this callback it's for the event On for know when the image upload it's complete.
-```
+
+``` 
 upload(file:any, fn:any){
 
 }
 ```
-
-
-
 
