@@ -1,9 +1,18 @@
 # CAP STORAGE AWS [![Generic badge](https://img.shields.io/badge/CAP-Active-<COLOR>.svg)](https://shields.io/)
 
+## Table of Contents
+
+* [Requirements](#Requirements)
+* [Installation](#Installation)
+* [Implementation into a module](#Use)
+* [Configuration AWS S3](#Configuration)
+* [Tags](#Tags)
+* [Inputs](#Inputs)
+* [Services](#Services)
+
 **CAP STORAGE AWS** is a module for **Angular**, with this module you can upload images to **AWS S3**.
 
-## **Previous requirements**
-
+## **Requirements**
 **CAP STORAGE AWS** use bootstrap's classes. To be able to display the component in the right way, bootstrap should have been installed in the project. In case you don't have bootstrap installed, you can run the following command or read their [documentation](https://getbootstrap.com/docs/4.3/getting-started/download/):
 
 ``` 
@@ -39,7 +48,7 @@ write the following command:
 npm install cap-storage-aws
 ```
 
-## **Implementation into a module**
+## **Use**
 
 To use this module go-to the app module and into the sections' import and put the AWS module.
 
@@ -65,7 +74,7 @@ CapStorageAWS.forRoot({
 
 The endopoint it's optional, if you don't want to save the data into a DB it's not need it into the forRoot.
 
-## **Configuration AWS S3**
+## **Configuration** 
 
 We recommend creating a specific folder into your bucket for save your images. In your bucket 
 go the section of **permissions**, after that, go to **CORS configuration** and write the following code:
@@ -85,7 +94,7 @@ go the section of **permissions**, after that, go to **CORS configuration** and 
 </CORSConfiguration>
 ```
 
-## **HTML tags**
+## **Tags**
 
 ## **Cap Upload**
 Tag to upload images into an Amazon bucket.
@@ -100,7 +109,7 @@ Tag to upload images into an Amazon bucket.
 
 ## **Cap Upload Drag and Drop**
 
-This tag use an external dependency called [ngx-file-drop](https://www.npmjs.com/package/ngx-file-drop).
+This tag use an external dependency called [ngx-file-drop](https://github.com/software-allies/cap-storage-aws/raw/feature/request-service/assets/images/cap-aws.gif?raw=true).
 Tag to upload any kind of file
 **Example of implementation**
 
@@ -109,7 +118,7 @@ Tag to upload any kind of file
 
 ```
 
-![Alt text](assets/images/cap-aws-drag-drop.gif?raw=true "example")
+![Alt text](https://github.com/software-allies/cap-storage-aws/raw/feature/request-service/assets/images/cap-aws-drag-drop.gif?raw=true "example")
 
 ## **Inputs**
 
@@ -183,13 +192,11 @@ app.component.html
 <cap-upload-drag-drop [token]="token"></cap-upload-drag-drop>
 ```
 
-app.component.ts
-
 **localStorageRef**
 | Param | Description |
 | --- | --- |
-| key | Object name's that has the credentials saved into the localStorage. |
-| reference | Property name's that makes reference to the token. |
+| key | Object name's that has the credentials saved into the localStorage.|
+| reference | Property name's that makes reference to the token.|
 
  
 *Structure*: 
