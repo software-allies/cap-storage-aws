@@ -8,8 +8,6 @@ import Swal from 'sweetalert2';
   selector: 'cap-upload',
   template:
     `
-      <simple-notifications [options]="options"></simple-notifications>
-
       <div class="row justify-content-md-center" *ngIf="selectedFile">
         <div class="col col-md-6">
           <div class="card">
