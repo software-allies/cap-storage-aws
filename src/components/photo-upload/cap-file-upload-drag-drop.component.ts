@@ -80,7 +80,9 @@ export class CapFileUploadDragDropComponent implements OnInit {
 
   public files: NgxFileDropEntry[] = [];
 
-  constructor(private uploadService: StorageService) {
+  constructor(private uploadService: StorageService) {}
+
+  ngOnInit() {
     if (this.localStorageRef.key !== '') {
       // Saving the information into the dataLS variable (Data LocalStorage)
       let dataLS: any = localStorage.getItem(`${this.localStorageRef.key}`);
@@ -96,9 +98,7 @@ export class CapFileUploadDragDropComponent implements OnInit {
         this.tokenRef = this.token;
       }
     }
-  }
-
-  ngOnInit() { }
+   }
 
   upload(file: any) {
     this.uploadService.upload(file, this.fields, this.tokenRef, (progress: any) => {

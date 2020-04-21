@@ -110,6 +110,11 @@ export class CapFileUploadComponent implements OnInit {
     const file = this.selectedFile.item(0);
     this.uploadService.upload(file, this.fields, this.tokenRef, (progress: any) => {
       this.progressBar = Math.round((progress.loaded * 100) / progress.total);
+      if (progress.loaded == progress.total) {
+        setTimeout(() => {
+          this.isComplete = true
+        }, 2000)
+      }
     });
   }
 
