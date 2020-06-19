@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
-import { StorageService } from '../../services/storage.service';
-import { IFile, IDbFields, ILocalStorage } from '../../interfaces/interface';
+import { StorageService } from '../services/storage.service';
+import { IFile, IDbFields, ILocalStorage } from '../interfaces/interface';
 
 @Component({
   selector: 'cap-upload-drag-drop',
@@ -10,10 +10,10 @@ import { IFile, IDbFields, ILocalStorage } from '../../interfaces/interface';
       <div class="row justify-content-md-center">
         <div class="col col-md-8">
           <div class="center mt-5">
-            <ngx-file-drop 
-              dropZoneLabel="Drop files here" 
-              (onFileDrop)="dropped($event)" 
-              (onFileOver)="fileOver($event)" 
+            <ngx-file-drop
+              dropZoneLabel="Drop files here"
+              (onFileDrop)="dropped($event)"
+              (onFileOver)="fileOver($event)"
               (onFileLeave)="fileLeave($event)">
                 <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
                   <p class="m-3"> Drop files here</p>
@@ -21,7 +21,7 @@ import { IFile, IDbFields, ILocalStorage } from '../../interfaces/interface';
                   <button type="button" class="btn btn-primary m-3" (click)="openFileSelector()">Browse Files</button>
                 </ng-template>
             </ngx-file-drop>
-          
+
           </div>
         </div>
       </div>
@@ -52,7 +52,7 @@ import { IFile, IDbFields, ILocalStorage } from '../../interfaces/interface';
         </div>
         </div>
       </div>
-      
+
     `,
   styles: [
     `
@@ -87,7 +87,7 @@ export class CapFileUploadDragDropComponent implements OnInit {
       // Saving the information into the dataLS variable (Data LocalStorage)
       let dataLS: any = localStorage.getItem(`${this.localStorageRef.key}`);
 
-      // Converting the response into the objLocal (objectLocal) that makes references 
+      // Converting the response into the objLocal (objectLocal) that makes references
       // to the Data from the local storage
       let objLocal = JSON.parse(dataLS);
 
@@ -107,7 +107,7 @@ export class CapFileUploadDragDropComponent implements OnInit {
   }
 
   public dropped(files: NgxFileDropEntry[]) {
-    this.filesNFormat = []
+    this.filesNFormat = [];
     this.files = files;
 
     for (const droppedFile of files) {
@@ -120,13 +120,11 @@ export class CapFileUploadDragDropComponent implements OnInit {
 
           fileToUpload = file;
           fileToUpload.progressBar = 0;
-          fileToUpload.sizeAux = this.formatFileSize(fileToUpload.size)
+          fileToUpload.sizeAux = this.formatFileSize(fileToUpload.size);
           if (fileToUpload !== undefined) {
-            this.filesNFormat.push(fileToUpload)
+            this.filesNFormat.push(fileToUpload);
           }
-
-          this.upload(fileToUpload)
-
+          this.upload(fileToUpload);
         });
       } else {
         // It was a directory (empty directories are added, otherwise only files)
@@ -145,7 +143,7 @@ export class CapFileUploadDragDropComponent implements OnInit {
 
   formatFileSize(bytes: any, decimalPoint?: any) {
     if (bytes == 0) return '0 Bytes';
-    var k = 1000,
+      var k = 1000,
       dm = decimalPoint || 2,
       sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
       i = Math.floor(Math.log(bytes) / Math.log(k));

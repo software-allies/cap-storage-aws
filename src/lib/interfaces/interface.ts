@@ -34,7 +34,7 @@ export interface IDbFields {
 /**
   * LocalStorage interface.
   * @param key Name of the object that makes references to yout localStorage Data
-  * @param reference Name of the property that contains the token 
+  * @param reference Name of the property that contains the token
 */
 export interface ILocalStorage {
   key: string;

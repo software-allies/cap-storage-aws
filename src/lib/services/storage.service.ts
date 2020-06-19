@@ -9,8 +9,11 @@ import { IDbFields } from '../interfaces/interface';
 
 import Swal from 'sweetalert2';
 
-@Injectable()
+@Injectable(
+  {providedIn: 'root'}
+)
 export class StorageService {
+
   private accessKeyId: string = '';
   private secretAccessKey: string = '';
   private region: string = '';

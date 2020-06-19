@@ -5,9 +5,9 @@ import { CommonModule } from '@angular/common';
 import { StorageService } from './services/storage.service';
 import { ConfigService } from './services/config-general.service';
 
-import { CapFileUploadComponent } from './components/photo-upload/cap-file-upload.component';
-import { CapShowImageComponent } from './components/show-photos/cap-show-image.component';
-import { CapFileUploadDragDropComponent } from './components/photo-upload/cap-file-upload-drag-drop.component';
+import { CapFileUploadComponent } from './components/cap-file-upload.component';
+import { CapShowImageComponent } from './components/cap-show-image.component';
+import { CapFileUploadDragDropComponent } from './components/cap-file-upload-drag-drop.component';
 
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { HttpClientModule } from '@angular/common/http';
