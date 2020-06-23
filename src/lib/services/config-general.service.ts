@@ -1,6 +1,5 @@
-import { Injectable, Optional } from '@angular/core';
+import { Optional } from '@angular/core';
 import { awsCredentials } from '../interfaces/interface';
-@Injectable()
 
 export class ConfigService {
   bucket: string;

@@ -1,6 +1,6 @@
 {
   "name": "cap-storage-aws",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "description": "An amazing module for Angular using AWS S3.",
   "keywords": [
     "Angular",
@@ -27,16 +27,14 @@
   "scripts": {
     "packagr": "ng-packagr -p ng-package.json"
   },
-  "homepage": "https://github.com/software-allies/cap-storage-aws/",
+  "homepage": "https://www.softwareallies.com/",
   "peerDependencies": {
     "@angular/common": "^8.2.14",
     "@angular/core": "^8.2.14",
     "@angular/animations": "~8.2.14",
     "aws-sdk": "^2.564.0",
     "ngx-file-drop": "^8.0.8",
-    "rollup": "^0.62.0",
     "sweetalert2": "^9.10.12",
-    "toastr": "^2.1.4",
     "uglify-js": "^3.4.2",
     "typescript": "^3.5.1",
     "uuid": "^7.0.3"
@@ -66,6 +64,5 @@
     "uglify-js": "^3.4.2",
     "uuid": "^7.0.3",
     "zone.js": "~0.9.1"
-
   }
 }
