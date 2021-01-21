@@ -8,52 +8,61 @@ import Swal from 'sweetalert2';
   selector: 'cap-upload',
   template:
     `
-      <div class="row justify-content-md-center" *ngIf="selectedFile">
-        <div class="col col-md-6">
-          <div class="card">
-            <img id="image" src="" class="card-img-top">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <div class="progress my-3">
-                    <div class="progress-bar" role="progressbar" [style.width]="progressBar + '%'" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{progressBar}}%</div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="input-group mb-3">
-                    <div class="custom-file">
-                        
-                      <input type="file" name="file" accept="image/*" id="file" class="custom-file-input" (change)="selectFile($event)" id="file" aria-describedby="inputGroupFileAddon01" [disabled]="progressBar === 100">
-                      <label class="custom-file-label" for="file">Choose file</label>
-                    </div>  
-                  </div>
-                  <button class="btn btn-primary btn-block" [disabled]="!selectedFile || progressBar === 100" (click)="upload()">Upload</button>
-                  <button class="btn btn-danger btn-block" [disabled]="!isComplete" (click)="cleanData()">Clean data</button>
-                  
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      
 
-      <div class="row justify-content-md-center" *ngIf="!selectedFile">
-        <div class="col col-md-6">
-          <div class="card">
-            <div class="imageNotFound">Photo</div>
-              <div class="card-body">
-                <div class="custom-file my-3">
-                  <input type="file" class="custom-file-input" name="file" accept="image/*" id="file" (change)="selectFile($event)">
-                  <label class="custom-file-label" for="customFile">Choose file</label>
-                </div>
-                <button class="btn btn-primary btn-block" [disabled]="!selectedFile" (click)="upload()">Upload</button>
-                
-              </div>
+
+      <section class="upload-section">
+        <div class="upload__image--height" *ngIf="!selectedFile">
+            
+          </div>
+        <div class="upload__image" *ngIf="selectedFile">
+          <img 
+            id="image"
+            src=""
+            alt="" 
+            class="image__element">
+        </div>
+  
+        <div class="progress">
+          <div class="progress__bar" [style.width]="progressBar + '%'">
+            <span class="percentage">{{progressBar}}%</span>
           </div>
         </div>
-      </div>
+
+        <br>
+
+        <div class="progress">
+          <span class="percentage--lite">{{progressBar}}%</span>
+          <div class="progress__bar--lite" [style.width]="progressBar + '%'">
+          </div>
+        </div>
+
+        <br>
+
+        <input 
+          class="upload__input"
+          type="file"
+          name="file" 
+          accept="image/*" 
+          id="file" 
+          (change)="selectFile($event)" 
+          [disabled]="progressBar === 100">
+  
+        <div class="upload__actions">
+          <button 
+            href="#" 
+            class="btn btn--blue u-full-width u-center-text u-margin-bottom-small"
+            [disabled]="!selectedFile || progressBar === 100" 
+            (click)="upload()">Upload file</button>
+          <button 
+            href="#" 
+            class="btn btn--red u-full-width u-center-text" 
+            [disabled]="!isComplete" 
+            (click)="cleanData()">Clear section</button>
+        </div>
+
+    </section>
+
     `,
   styles: [
     `
