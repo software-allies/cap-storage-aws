@@ -17,7 +17,6 @@ export class StorageService {
   private bucket: string = '';
   private folder: string = '';
   private endpoint?: string = '';
-
   private bucketConfig: any;
 
   constructor(private _config: ConfigService, private requestService: RequestService) {
@@ -26,6 +25,7 @@ export class StorageService {
     this.region = this._config.region;
     this.bucket = this._config.bucket;
     this.folder = this._config.folder;
+    
     if (this._config.endpoint !== undefined || this._config.endpoint !== '') {
       this.endpoint = this._config.endpoint;
     }
@@ -44,7 +44,6 @@ export class StorageService {
       Body: file,
       ACL: 'public-read'
     };
-
     this.bucketConfig.upload(params, async (err: any, data: any) => {
       if (err) {
         if (this.endpoint === '' && token === '') {
@@ -57,8 +56,7 @@ export class StorageService {
           return false;
         }
       }
-      if (this.endpoint) this.requestService.createFileRecord(data, fields, token);
-
+      if (this.endpoint) await this.requestService.createFileRecord(data, fields, token);
     }).on('httpUploadProgress', fn);
   }
 

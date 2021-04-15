@@ -1,5 +1,6 @@
-import { Injectable, Optional } from '@angular/core';
+import { Injectable, Optional, Inject } from '@angular/core';
 import { awsCredentials } from '../interfaces/interface';
+import { config } from './config';
 @Injectable()
 
 export class ConfigService {
@@ -10,7 +11,7 @@ export class ConfigService {
   folder: string;
   endpoint?: string;
 
-  constructor(@Optional() config: awsCredentials) {
+  constructor(@Optional() @Inject(config) config: awsCredentials) {
     if (config) {
       this.bucket = config.bucket;
       this.accessKeyId = config.accessKeyId;
