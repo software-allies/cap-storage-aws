@@ -40,3 +40,11 @@ export interface ILocalStorage {
   key: string;
   reference: string;
 };
+
+export interface IAWSFile {
+  Bucket: string;
+  ETag: string;
+  Key: string;
+  Location: string;
+  key: string;
+}
