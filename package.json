@@ -45,6 +45,7 @@
     "ng2-pdf-viewer": "^6.4.1",
     "ngx-file-drop": "^8.0.8",
     "ngx-pagination": "^5.0.0",
+    "ngx-spinner": "^8.0.0",
     "rollup": "^0.62.0",
     "sweetalert2": "^9.10.12",
     "toastr": "^2.1.4",

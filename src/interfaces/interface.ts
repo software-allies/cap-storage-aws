@@ -48,3 +48,8 @@ export interface IAWSFile {
   Location: string;
   key: string;
 }
+
+export interface IAWSFileList {
+  url: string;
+  name: string;
+}

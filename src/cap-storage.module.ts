@@ -24,15 +24,17 @@ import { awsCredentials } from './interfaces/interface';
 
 // Modules
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   imports: [
-    NgxPaginationModule,
+    NgxPaginationModule, 
     CommonModule,
     NgxFileDropModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    PdfViewerModule
+    PdfViewerModule,
+    NgxSpinnerModule
   ],
   exports: [
     CommonModule,
