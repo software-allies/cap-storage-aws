@@ -53,3 +53,17 @@ export interface IAWSFileList {
   url: string;
   name: string;
 }
+
+export interface Ifilter {
+  property: string,
+  value: string
+}
+
+export interface IFilterBy {
+  filters: Ifilter[];
+}
+
+export interface IReferences {
+  propertyName: string,
+  referenceTo: string
+}
