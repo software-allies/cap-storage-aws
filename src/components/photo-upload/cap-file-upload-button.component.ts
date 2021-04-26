@@ -1,9 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { IAWSFileList, IDbFields, ILocalStorage } from '../../interfaces/interface';
+import { IAWSFileList, IDbFields, ILocalStorage, IFilterBy, awsCredentials, IReferences, Ifilter } from '../../interfaces/interface';
 import * as S3 from 'aws-sdk/clients/s3';
 import { ConfigService } from '../../services/config-general.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import { RequestService } from '../../services/request.service';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'cap-upload-button',
@@ -17,7 +18,7 @@ import { RequestService } from '../../services/request.service';
       </div>
 
       <div class="file__list--empty" *ngIf="listFiles.length === 0">
-        You don't have saved
+        You don't have files saved
       </div>
 
       <div *ngIf="listFiles.length > 0">
@@ -28,7 +29,7 @@ import { RequestService } from '../../services/request.service';
               <label class="file__name">{{file.name}}</label>
             </div>
             <div class="file__options">
-              <button class="btn file__btn" (click)="showPdf(file.url)"><i class="bi bi-eye" data-toggle="modal" data-target="#exampleModal"></i></button>
+              <button class="btn file__btn" (click)="showPdf(file.url)"><i class="bi bi-eye" id="open-button"></i></button>
               <a type="button" class="btn file__btn--link" href="{{ file.url }}" ><i class="bi bi-cloud-arrow-down-fill"></i></a>
               <button class="btn file__btn" (click)="upload()"><i class="bi bi-trash"></i></button>
             </div>
@@ -46,7 +47,7 @@ import { RequestService } from '../../services/request.service';
       </div>
     </div>
 
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  <button type="button" class="btn btn-primary" id="open-button">
     Launch demo modal
   </button>
 
@@ -58,43 +59,42 @@ import { RequestService } from '../../services/request.service';
     [fullScreen]="true">
       <p class="spinner" > Uploading file... </p>
   </ngx-spinner>
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-      hi
-        <pdf-viewer [src]="pdfSrc" [render-text]="true" [original-size]="false"></pdf-viewer>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  
+  
+
+  <button (click)="htmlInsideModal.open()">Raw HTML inside modal</button>
+<modal #htmlInsideModal>
+  <ng-template #modalHeader><h2>HTML inside modal</h2></ng-template>
+  <ng-template #modalBody>
+  <ngx-doc-viewer [url]="fileURL" viewer="google" style="width:100%;height:50vh;"></ngx-doc-viewer>
+
+  </ng-template>
+</modal>
   `,
   styles: [`
-  
-  
+
   `]
 })
 
 export class CapFileUploadButtonComponent implements OnInit {
   // Inputs
   @Input() fileUploaded?: string = 'upload';
-  @Input() listFiles: IAWSFileList[] = [];
   @Input() token: string = '';
   @Input() fields: IDbFields[] = [];
-  @Input() localStorageRef: ILocalStorage = {
-    key: '',
-    reference: ''
-  };
-  
+  @Input() localStorageRef: ILocalStorage;
+  @Input() userID: string = 'null';
+  @Input() queryFilters: Ifilter[] = [];
+
+  // It's going to recive the fields that are related with the name and the url of the file
+  @Input() fieldsReference: IReferences[];
+  @Input() resourcesURLPath: string;
+
   // Outputs
   @Output() dataFile = new EventEmitter<any>();
   @Output() dataFileError = new EventEmitter<any>();
   @Output() download = new EventEmitter<any>();
-  @Output() preview = new EventEmitter<any>();
 
-  bucketConfig: any;
+  private bucketConfig: any;
   private accessKeyId: string = '';
   private secretAccessKey: string = '';
   private region: string = '';
@@ -102,31 +102,83 @@ export class CapFileUploadButtonComponent implements OnInit {
   private folder: string = '';
   private endpoint?: string = '';
 
-  pdfSrc: string = '';
+  fileURL: string = '';
   selectedFile: any;
   reader = new FileReader();
   progressBar: number = 0;
+  listFiles: IAWSFileList[];
+
 
   p: number = 1;
   public loading = false;
 
-  constructor(private _config: ConfigService, private spinner: NgxSpinnerService, private requestService: RequestService) {
-    this.accessKeyId = this._config.accessKeyId;
-    this.secretAccessKey = this._config.secretAccessKey;
-    this.region = this._config.region;
-    this.bucket = this._config.bucket;
-    this.folder = this._config.folder;
+  constructor(
+    private _config: ConfigService,
+    private spinner: NgxSpinnerService,
+    private requestService: RequestService) {
 
+    this.getConfigValues(this._config);
+
+
+
+
+  }
+
+  // Get reference to all the object related with the AWS S3 credentials 
+  private getConfigValues(config: awsCredentials) {
+    this.accessKeyId = config.accessKeyId;
+    this.secretAccessKey = config.secretAccessKey;
+    this.region = config.region;
+    this.bucket = config.bucket;
+    this.folder = config.folder;
+
+    this.bucketConfiguration();
+
+  }
+
+  // Configuring s3 bucket's
+  private bucketConfiguration() {
     this.bucketConfig = new S3({
       accessKeyId: this.accessKeyId,
       secretAccessKey: this.secretAccessKey,
       region: this.region
     })
-
   }
+  ngOnChanges() {
+    if (this.resourcesURLPath || this.resourcesURLPath !== '') {
+      this.loadFilesToList(this.queryFilters, this.fieldsReference);
+    }
+  }
+
 
   ngOnInit() {
 
+    // this.getModalReference();
+
+
+  }
+
+
+  private async loadFilesToList(filters: Ifilter[], reference: IReferences[]) {
+    console.log('reference: ',typeof reference);
+    console.log('filters: ', typeof filters);
+    const newObject = Object.assign({}, ...filters.map(filter => ({ [filter.property]: filter.value })));
+    console.log('newObject: ', newObject);
+    const dbField = Object.assign({}, ...reference.map(object => ({ [object.propertyName]: object.referenceTo })));
+    console.log('dbField: ', dbField);
+    // let fileElements: any = await this.getFieldsFromApi({ where: { ...newObject } })
+
+    // this.listFiles = [{ name: '', url: '' }]
+
+
+  }
+
+  private getFieldsFromApi(filter: object) {
+
+    return this.resourcesURLPath ? this.requestService.getCapFilesByFilter(this.resourcesURLPath, filter)
+      .toPromise()
+      .then((file: [any]) => file)
+      .catch(error => null) : console.log('You are not using a file path');
   }
 
   async upload() {
@@ -138,7 +190,13 @@ export class CapFileUploadButtonComponent implements OnInit {
       Body: file,
       ACL: 'public-read'
     };
-    this.bucketConfig.upload(params, (err: any, data: any) => {
+
+    this.uploadFilesToS3(params);
+
+  }
+
+  private uploadFilesToS3(params: any) {
+    this.bucketConfig.upload(params, async (err: any, data: any) => {
       if (err) {
         this.dataFileError.emit(err);
         this.loading = false;
@@ -153,7 +211,7 @@ export class CapFileUploadButtonComponent implements OnInit {
         name: data.key,
       }
       this.listFiles.push(fileData);
-      if (this.endpoint) await this.requestService.createFileRecord(data, fields, token);
+      if (this.endpoint) await this.requestService.createFileRecord(data, this.fields, this.token);
     }).on('httpUploadProgress', (progress: any) => {
 
       this.progressBar = Math.round((progress.loaded * 100) / progress.total);
@@ -167,7 +225,12 @@ export class CapFileUploadButtonComponent implements OnInit {
     });
   }
 
-  selectFile(event: any) {
+  private selectFile(event: any) {
+    this.getCurrentFile(event);
+    this.upload()
+  }
+
+  private getCurrentFile(event: any) {
     this.selectedFile = event.target.files;
     this.reader.onload = (event: any) => {
       const image: any = document.getElementById("image");
@@ -175,18 +238,9 @@ export class CapFileUploadButtonComponent implements OnInit {
     }
     const f = event.target.files[0];
     this.reader.readAsDataURL(f);
-
-    this.upload()
   }
 
-  showPdf(src: any) {
-    let file = new Blob([src]);
-    this.pdfSrc = URL.createObjectURL(file);
+  private showPdf(src: any) {
+    this.fileURL = src;
   }
-
-  request() {
-
-  }
-
-
 }

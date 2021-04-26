@@ -18,36 +18,40 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { HttpClientModule } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { ModalModule } from 'angular-custom-modal';
 
 // Interfaces
 import { awsCredentials } from './interfaces/interface';
 
 // Modules
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   imports: [
-    NgxPaginationModule, 
     CommonModule,
-    NgxFileDropModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
     PdfViewerModule,
-    NgxSpinnerModule
+    HttpClientModule,
+    NgxSpinnerModule,
+    NgxFileDropModule,
+    NgxDocViewerModule,
+    NgxPaginationModule,
+    BrowserAnimationsModule,
+    ModalModule
   ],
   exports: [
     CommonModule,
-    CapFileUploadComponent,
     CapShowImageComponent,
-    CapFileUploadDragDropComponent,
-    CapFileUploadButtonComponent
+    CapFileUploadComponent,
+    CapFileUploadButtonComponent,
+    CapFileUploadDragDropComponent
   ],
   declarations: [
-    CapFileUploadComponent,
     CapShowImageComponent,
-    CapFileUploadDragDropComponent,
-    CapFileUploadButtonComponent
+    CapFileUploadComponent,
+    CapFileUploadButtonComponent,
+    CapFileUploadDragDropComponent
   ],
   providers: [StorageService],
   schemas: [
