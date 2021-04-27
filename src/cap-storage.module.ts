@@ -21,6 +21,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { ModalModule } from 'angular-custom-modal';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
 
 // Interfaces
 import { awsCredentials } from './interfaces/interface';
@@ -38,6 +39,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NgxDocViewerModule,
     NgxPaginationModule,
     BrowserAnimationsModule,
+    NgxSmartModalModule.forRoot(),
     ModalModule
   ],
   exports: [

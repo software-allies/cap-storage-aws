@@ -69,9 +69,7 @@ export class RequestService {
       console.log('error: ', error);
       return error;
     });
-
   }
-
 
   async getFilesRecords(filePath: string, userId: string) {
     const httpOptions: any = {
@@ -99,7 +97,6 @@ export class RequestService {
   }
 
   getCapFilesByFilter(filePath: string, filter: {}): Observable<Array<any>> {
-
     let pathRequest = `${this._config.endpoint}/${filePath}?filter=${JSON.stringify(filter)}`;
     return this.http.get<[any]>(pathRequest, this.httpOptions)
       .pipe(

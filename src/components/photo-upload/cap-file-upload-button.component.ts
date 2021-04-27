@@ -60,16 +60,12 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
       <p class="spinner" > Uploading file... </p>
   </ngx-spinner>
   
-  
+  <ngx-smart-modal #pdfPreview identifier="pdfPreview">
+    <ngx-doc-viewer [url]="fileURL" viewer="google" style="width:100%;height:50vh;"></ngx-doc-viewer>
 
-  <button (click)="htmlInsideModal.open()">Raw HTML inside modal</button>
-<modal #htmlInsideModal>
-  <ng-template #modalHeader><h2>HTML inside modal</h2></ng-template>
-  <ng-template #modalBody>
-  <ngx-doc-viewer [url]="fileURL" viewer="google" style="width:100%;height:50vh;"></ngx-doc-viewer>
+    <button class="btn" (click)="closeModal()">Close</button>
+  </ngx-smart-modal>
 
-  </ng-template>
-</modal>
   `,
   styles: [`
 
@@ -83,7 +79,7 @@ export class CapFileUploadButtonComponent implements OnInit {
   @Input() fields: IDbFields[] = [];
   @Input() localStorageRef: ILocalStorage;
   @Input() userID: string = 'null';
-  @Input() queryFilters: Ifilter[] = [];
+  @Input() queryFilters: Array<Ifilter> = [];
 
   // It's going to recive the fields that are related with the name and the url of the file
   @Input() fieldsReference: IReferences[];
@@ -106,7 +102,7 @@ export class CapFileUploadButtonComponent implements OnInit {
   selectedFile: any;
   reader = new FileReader();
   progressBar: number = 0;
-  listFiles: IAWSFileList[];
+  listFiles: IAWSFileList[] = [];
 
 
   p: number = 1;
@@ -115,13 +111,10 @@ export class CapFileUploadButtonComponent implements OnInit {
   constructor(
     private _config: ConfigService,
     private spinner: NgxSpinnerService,
-    private requestService: RequestService) {
+    private requestService: RequestService,
+    public ngxSmartModalService: NgxSmartModalService) {
 
     this.getConfigValues(this._config);
-
-
-
-
   }
 
   // Get reference to all the object related with the AWS S3 credentials 
@@ -144,41 +137,56 @@ export class CapFileUploadButtonComponent implements OnInit {
       region: this.region
     })
   }
+
   ngOnChanges() {
     if (this.resourcesURLPath || this.resourcesURLPath !== '') {
       this.loadFilesToList(this.queryFilters, this.fieldsReference);
     }
   }
 
-
   ngOnInit() {
-
-    // this.getModalReference();
-
 
   }
 
-
-  private async loadFilesToList(filters: Ifilter[], reference: IReferences[]) {
-    console.log('reference: ',typeof reference);
-    console.log('filters: ', typeof filters);
-    const newObject = Object.assign({}, ...filters.map(filter => ({ [filter.property]: filter.value })));
-    console.log('newObject: ', newObject);
+  private async loadFilesToList(filters: Ifilter[], reference: Array<IReferences>) {
     const dbField = Object.assign({}, ...reference.map(object => ({ [object.propertyName]: object.referenceTo })));
-    console.log('dbField: ', dbField);
-    // let fileElements: any = await this.getFieldsFromApi({ where: { ...newObject } })
+    let fileElements: any = await this.getFieldsFromApi({ where: { ...filters } })
 
-    // this.listFiles = [{ name: '', url: '' }]
+    this.fillArrayList(fileElements, dbField);
+  }
 
+  private fillArrayList(list: any, dbField: any) {
 
+    // Getting the key of the object from the value
+    let nameKey = Object.keys(dbField).find(key => dbField[key] === 'name');
+    let urlKey = Object.keys(dbField).find(key => dbField[key] === 'url');
+
+    this.listFiles = list.map((element: any) => {
+
+      let newElement: IAWSFileList = { name: '', url: '' };
+
+      if (element[`${nameKey}`]) {
+        newElement.name = element[`${nameKey}`]
+      }
+
+      if (element[`${urlKey}`]) {
+        newElement.url = element[`${urlKey}`]
+      }
+      return newElement;
+    });
   }
 
   private getFieldsFromApi(filter: object) {
 
-    return this.resourcesURLPath ? this.requestService.getCapFilesByFilter(this.resourcesURLPath, filter)
-      .toPromise()
-      .then((file: [any]) => file)
-      .catch(error => null) : console.log('You are not using a file path');
+    if (this.resourcesURLPath) {
+      return this.requestService.getCapFilesByFilter(this.resourcesURLPath, filter)
+        .toPromise()
+        .then((file: [any]) => file)
+        .catch(error => null)
+    }
+    console.log('You are not using a file path');
+    return null;
+
   }
 
   async upload() {
@@ -190,9 +198,7 @@ export class CapFileUploadButtonComponent implements OnInit {
       Body: file,
       ACL: 'public-read'
     };
-
     this.uploadFilesToS3(params);
-
   }
 
   private uploadFilesToS3(params: any) {
@@ -242,5 +248,10 @@ export class CapFileUploadButtonComponent implements OnInit {
 
   private showPdf(src: any) {
     this.fileURL = src;
+    this.ngxSmartModalService.getModal('pdfPreview').open()
+  }
+
+  private closeModal(){
+    this.ngxSmartModalService.getModal('pdfPreview').close()
   }
 }
