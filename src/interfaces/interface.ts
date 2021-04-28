@@ -52,6 +52,11 @@ export interface IAWSFile {
 export interface IAWSFileList {
   url: string;
   name: string;
+  Bucket?: string;
+  ETag?: string;
+  Key?: string;
+  Location?: string;
+  key?: string;
 }
 
 export interface Ifilter {
