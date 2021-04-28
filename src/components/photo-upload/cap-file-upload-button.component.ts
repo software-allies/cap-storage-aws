@@ -5,6 +5,7 @@ import { ConfigService } from '../../services/config-general.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import { RequestService } from '../../services/request.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'cap-upload-button',
@@ -14,7 +15,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
         Attachments
       </h4>
       <div>
-        Payroll receipts, .xml, .doc, .pdf
+        Payroll receipts, {{typeOfFiles}}
       </div>
 
       <div class="file__list--empty" *ngIf="listFiles.length === 0">
@@ -29,9 +30,9 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
               <label class="file__name">{{file.name}}</label>
             </div>
             <div class="file__options">
-              <button class="btn file__btn" (click)="showPdf(file.url)"><i class="bi bi-eye" id="open-button"></i></button>
+              <button class="btn file__btn" (click)="showContent(file)"><i class="bi bi-eye" id="open-button"></i></button>
               <a type="button" class="btn file__btn--link" href="{{ file.url }}" ><i class="bi bi-cloud-arrow-down-fill"></i></a>
-              <button class="btn file__btn" (click)="upload()"><i class="bi bi-trash"></i></button>
+              <button class="btn file__btn" (click)="showConfirmation(file)"><i class="bi bi-trash"></i></button>
             </div>
           </div>
         </div>
@@ -40,16 +41,12 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
         </div>
       </div>
       <div class="upload__container">
-        <img id="image" src="" class="file__visor">
-        <input type="file" class="input__file" accept=".pdf, .xml, .doc, .jpg" name="file" id="file"
+        <img id="image" src="" class="file__visor" >
+        <input type="file" class="input__file" [accept]="typeOfFiles" name="file" id="file"
           (change)="selectFile($event)">
         <label class="btn upload__button" for="file">Upload file</label>
       </div>
     </div>
-
-  <button type="button" class="btn btn-primary" id="open-button">
-    Launch demo modal
-  </button>
 
   <ngx-spinner
     bdColor="rgba(0, 0, 0, 0.8)" 
@@ -61,9 +58,20 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
   </ngx-spinner>
   
   <ngx-smart-modal #pdfPreview identifier="pdfPreview">
-    <ngx-doc-viewer [url]="fileURL" viewer="google" style="width:100%;height:50vh;"></ngx-doc-viewer>
+    <img class="image" [src]="fileURL" *ngIf="isAnImage else pdfVisor">
 
-    <button class="btn" (click)="closeModal()">Close</button>
+    <ng-template #pdfVisor>
+      <ngx-doc-viewer [url]="fileURL" viewer="google" style="width:100%;height:80vh;"></ngx-doc-viewer>
+    </ng-template>
+    <button class="btn" (click)="closeModal('pdfPreview')">Close</button>
+  </ngx-smart-modal>
+
+  <ngx-smart-modal #confirmation identifier="confirmation" class="modal">
+    <h4 class="heading-tertiary">Are you sure that you want to delete this file</h4>
+    <div class="modal__content u-margin-bottom-medium u-margin-top-medium">
+      <button class="btn" (click)="deleteFile(fileToRemove)">Yes</button>
+      <button class="btn" (click)="closeModal('confirmation')">Cancel</button>
+    </div>
   </ngx-smart-modal>
 
   `,
@@ -74,6 +82,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 
 export class CapFileUploadButtonComponent implements OnInit {
   // Inputs
+  @Input() filesToAccept: string[] = [];
   @Input() fileUploaded?: string = 'upload';
   @Input() token: string = '';
   @Input() fields: IDbFields[] = [];
@@ -97,6 +106,8 @@ export class CapFileUploadButtonComponent implements OnInit {
   private bucket: string = '';
   private folder: string = '';
   private endpoint?: string = '';
+  private fileToRemove: IAWSFileList;
+  typeOfFiles: string = '.pdf, .xml, .doc, .jpg';
 
   fileURL: string = '';
   selectedFile: any;
@@ -104,6 +115,7 @@ export class CapFileUploadButtonComponent implements OnInit {
   progressBar: number = 0;
   listFiles: IAWSFileList[] = [];
 
+  isAnImage: boolean = false;
 
   p: number = 1;
   public loading = false;
@@ -139,6 +151,7 @@ export class CapFileUploadButtonComponent implements OnInit {
   }
 
   ngOnChanges() {
+    this.typeOfFiles = this.filesToAccept.join(', ');
     if (this.resourcesURLPath || this.resourcesURLPath !== '') {
       this.loadFilesToList(this.queryFilters, this.fieldsReference);
     }
@@ -231,7 +244,7 @@ export class CapFileUploadButtonComponent implements OnInit {
     });
   }
 
-  private selectFile(event: any) {
+  selectFile(event: any) {
     this.getCurrentFile(event);
     this.upload()
   }
@@ -246,12 +259,59 @@ export class CapFileUploadButtonComponent implements OnInit {
     this.reader.readAsDataURL(f);
   }
 
-  private showPdf(src: any) {
-    this.fileURL = src;
+  showContent(file: any) {
+    if (file.name.split('.')[1] === 'jpg' || file.name.split('.')[1] === 'png') {
+      this.isAnImage = true;
+      this.fileURL = file.url;
+    } else {
+      this.isAnImage = false;
+      this.fileURL = file.url;
+    }
     this.ngxSmartModalService.getModal('pdfPreview').open()
   }
 
-  private closeModal(){
-    this.ngxSmartModalService.getModal('pdfPreview').close()
+  closeModal(modalName: string) {
+    this.ngxSmartModalService.getModal(modalName).close()
+    this.isAnImage = false;
+  }
+
+  private delete(params: any) {
+
+    this.bucketConfig.deleteObject(params, (error: any, data: any) => {
+      if (error) {
+        Swal.fire(
+          `${error.statusText} status ${error.status}`,
+          `${error.message}`,
+          'error'
+        );
+      }
+
+      setTimeout(() => {
+        Swal.fire(
+          'Successful!',
+          'File has been deleted successfully',
+          'success'
+        );
+        this.listFiles.pop();
+        this.closeModal('confirmation')
+      }, 200);
+
+      // res.status(200).send("File has been deleted successfully");
+    });
+  }
+
+  showConfirmation(file: IAWSFileList) {
+    this.ngxSmartModalService.getModal('confirmation').open();
+    this.fileToRemove = file
+    console.log(' this.fileToRemove: ', this.fileToRemove);
+  }
+
+
+  deleteFile(file: IAWSFileList) {
+    const params = {
+      Bucket: this.bucket,
+      Key: `${file.name}`
+    };
+    this.delete(params)
   }
 }
