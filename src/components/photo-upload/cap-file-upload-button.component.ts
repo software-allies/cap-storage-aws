@@ -233,13 +233,15 @@ export class CapFileUploadButtonComponent implements OnInit {
   @Input() fileUploaded?: string = 'upload';
   @Input() token: string = '';
   @Input() fields: IDbFields[] = [];
-  @Input() localStorageRef: ILocalStorage;
+  @Input() localStorageRef: ILocalStorage = {
+    key: '',
+    reference: ''
+  };
   @Input() userID: string = 'null';
   @Input() queryFilters: Array<Ifilter> = [];
 
   // It's going to recive the fields that are related with the name and the url of the file
   @Input() fieldsReference: IReferences[];
-  @Input() resourcesURLPath: string;
 
   // Outputs
   @Output() dataFile = new EventEmitter<any>();
@@ -253,7 +255,8 @@ export class CapFileUploadButtonComponent implements OnInit {
   private bucket: string = '';
   private folder: string = '';
   private endpoint?: string = '';
-  private fileToRemove: IAWSFileList;
+  tokenRef: string;
+  fileToRemove: IAWSFileList;
   typeOfFiles: string = '.pdf, .xml, .doc, .jpg';
 
   fileURL: string = '';
@@ -283,7 +286,7 @@ export class CapFileUploadButtonComponent implements OnInit {
     this.region = config.region;
     this.bucket = config.bucket;
     this.folder = config.folder;
-
+    config.endpoint ? this.endpoint = config.endpoint : '';
     this.bucketConfiguration();
 
   }
@@ -299,16 +302,35 @@ export class CapFileUploadButtonComponent implements OnInit {
 
   ngOnChanges() {
     this.typeOfFiles = this.filesToAccept.join(', ');
-    if (this.resourcesURLPath || this.resourcesURLPath !== '') {
+    if(this.endpoint){
       this.loadFilesToList(this.queryFilters, this.fieldsReference);
     }
+    this.getLocalStorageRef();
   }
 
   ngOnInit() {
-
+   
   }
 
-  private async loadFilesToList(filters: Ifilter[], reference: Array<IReferences>) {
+  private getLocalStorageRef() {
+    if (this.localStorageRef.key !== '') {
+      // Saving the information into the dataLS variable (Data LocalStorage)
+      let dataLS: any = localStorage.getItem(`${this.localStorageRef.key}`);
+
+      // Converting the response into the objLocal (objectLocal) that makes references 
+      // to the Data from the local storage
+      let objLocal = JSON.parse(dataLS);
+
+      // Saving the token into the variable token
+      this.tokenRef = objLocal[`${this.localStorageRef.reference}`];
+    } else {
+      if (this.token.length > 0) {
+        this.tokenRef = this.token;
+      }
+    }
+  }
+
+  private async loadFilesToList(filters: Ifilter[], reference: IReferences[]) {
     const dbField = Object.assign({}, ...reference.map(object => ({ [object.propertyName]: object.referenceTo })));
     let fileElements: any = await this.getFieldsFromApi({ where: { ...filters } })
 
@@ -338,14 +360,10 @@ export class CapFileUploadButtonComponent implements OnInit {
 
   private getFieldsFromApi(filter: object) {
 
-    if (this.resourcesURLPath) {
-      return this.requestService.getCapFilesByFilter(this.resourcesURLPath, filter)
-        .toPromise()
-        .then((file: [any]) => file)
-        .catch(error => null)
-    }
-    console.log('You are not using a file path');
-    return null;
+    return this.requestService.getCapFilesByFilter(filter)
+      .toPromise()
+      .then((file: [any]) => file)
+      .catch(error => [])
 
   }
 
@@ -362,6 +380,7 @@ export class CapFileUploadButtonComponent implements OnInit {
   }
 
   private uploadFilesToS3(params: any) {
+    console.log('this.endpoint: ', this.endpoint);
     this.bucketConfig.upload(params, async (err: any, data: any) => {
       if (err) {
         this.dataFileError.emit(err);
@@ -377,7 +396,8 @@ export class CapFileUploadButtonComponent implements OnInit {
         name: data.key,
       }
       this.listFiles.push(fileData);
-      if (this.endpoint) await this.requestService.createFileRecord(data, this.fields, this.token);
+      console.log('his.endpoint: ', this.endpoint);
+      if (this.endpoint) await this.requestService.createFileRecord(data, this.fields, this.tokenRef);
     }).on('httpUploadProgress', (progress: any) => {
 
       this.progressBar = Math.round((progress.loaded * 100) / progress.total);
