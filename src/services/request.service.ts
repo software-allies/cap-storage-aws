@@ -22,7 +22,6 @@ export class RequestService {
 
 
   async createFileRecord(dataFile: any, fields: any, token?: any) {
-
     fields.forEach((field: any) => {
       switch (field.association) {
         case 'id':
@@ -96,8 +95,8 @@ export class RequestService {
     });
   }
 
-  getCapFilesByFilter(filePath: string, filter: {}): Observable<Array<any>> {
-    let pathRequest = `${this._config.endpoint}/${filePath}?filter=${JSON.stringify(filter)}`;
+  getCapFilesByFilter(filter: {}): Observable<Array<any>> {
+    let pathRequest = `${this._config.endpoint}?filter=${JSON.stringify(filter)}`;
     return this.http.get<[any]>(pathRequest, this.httpOptions)
       .pipe(
         retry(2),
