@@ -43,6 +43,7 @@
     "@angular/fire": "^5.2.1",
     "angular-custom-modal": "^1.2.0",
     "aws-sdk": "^2.564.0",
+    "bootstrap-icons": "^1.4.1",
     "ng2-pdf-viewer": "^6.4.1",
     "ngx-doc-viewer": "^2.0.2",
     "ngx-file-drop": "^8.0.8",
