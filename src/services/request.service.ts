@@ -28,7 +28,7 @@ export class RequestService {
           this.dataPost[`${field.name}`] = uuidv4();
           break;
         case 'name':
-          this.dataPost[`${field.name}`] = dataFile.key.split('/')[1].split('.')[0];
+          this.dataPost[`${field.name}`] = dataFile.key.split('/')[1];
           break;
         case 'url':
           this.dataPost[`${field.name}`] = dataFile.Location;
@@ -39,7 +39,7 @@ export class RequestService {
       }
     });
 
-    if (token !== '') {
+    if (token !== '' || token !== null) {
       this.token = token;
       return await this.postRequest();
     }
