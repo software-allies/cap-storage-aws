@@ -302,29 +302,31 @@ export class CapFileUploadButtonComponent implements OnInit {
 
   ngOnChanges() {
     this.typeOfFiles = this.filesToAccept.join(', ');
-    if(this.endpoint){
+    if (this.endpoint) {
       this.loadFilesToList(this.queryFilters, this.fieldsReference);
     }
     this.getLocalStorageRef();
   }
 
   ngOnInit() {
-   
+
   }
 
   private getLocalStorageRef() {
     if (this.localStorageRef.key !== '') {
       // Saving the information into the dataLS variable (Data LocalStorage)
       let dataLS: any = localStorage.getItem(`${this.localStorageRef.key}`);
+      if (dataLS !== null) {
+        // Converting the response into the objLocal (objectLocal) that makes references 
+        // to the Data from the local storage
+        let objLocal = JSON.parse(dataLS);
 
-      // Converting the response into the objLocal (objectLocal) that makes references 
-      // to the Data from the local storage
-      let objLocal = JSON.parse(dataLS);
+        // Saving the token into the variable token
+        this.tokenRef = objLocal[`${this.localStorageRef.reference}`];
+      }
 
-      // Saving the token into the variable token
-      this.tokenRef = objLocal[`${this.localStorageRef.reference}`];
     } else {
-      if (this.token.length > 0) {
+      if (this.token) {
         this.tokenRef = this.token;
       }
     }
@@ -344,7 +346,6 @@ export class CapFileUploadButtonComponent implements OnInit {
     let urlKey = Object.keys(dbField).find(key => dbField[key] === 'url');
 
     this.listFiles = list.map((element: any) => {
-
       let newElement: IAWSFileList = { name: '', url: '' };
 
       if (element[`${nameKey}`]) {
@@ -396,7 +397,6 @@ export class CapFileUploadButtonComponent implements OnInit {
         name: data.key,
       }
       this.listFiles.push(fileData);
-      console.log('his.endpoint: ', this.endpoint);
       if (this.endpoint) await this.requestService.createFileRecord(data, this.fields, this.tokenRef);
     }).on('httpUploadProgress', (progress: any) => {
 
@@ -470,7 +470,6 @@ export class CapFileUploadButtonComponent implements OnInit {
   showConfirmation(file: IAWSFileList) {
     this.ngxSmartModalService.getModal('confirmation').open();
     this.fileToRemove = file
-    console.log(' this.fileToRemove: ', this.fileToRemove);
   }
 
 
