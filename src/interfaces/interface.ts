@@ -50,6 +50,7 @@ export interface IAWSFile {
 }
 
 export interface IAWSFileList {
+  id?: string;
   url: string;
   name: string;
   Bucket?: string;

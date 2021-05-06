@@ -344,6 +344,7 @@ export class CapFileUploadButtonComponent implements OnInit {
     // Getting the key of the object from the value
     let nameKey = Object.keys(dbField).find(key => dbField[key] === 'name');
     let urlKey = Object.keys(dbField).find(key => dbField[key] === 'url');
+    let id = Object.keys(dbField).find(key => dbField[key] === 'id');
 
     this.listFiles = list.map((element: any) => {
       let newElement: IAWSFileList = { name: '', url: '' };
@@ -354,6 +355,10 @@ export class CapFileUploadButtonComponent implements OnInit {
 
       if (element[`${urlKey}`]) {
         newElement.url = element[`${urlKey}`]
+      }
+      
+      if (element[`${id}`]) {
+        newElement.id = element[`${id}`]
       }
       return newElement;
     });
@@ -442,7 +447,7 @@ export class CapFileUploadButtonComponent implements OnInit {
     this.isAnImage = false;
   }
 
-  private delete(params: any) {
+  private delete(params: any, file: IAWSFileList) {
 
     this.bucketConfig.deleteObject(params, (error: any, data: any) => {
       if (error) {
@@ -459,8 +464,13 @@ export class CapFileUploadButtonComponent implements OnInit {
           'File has been deleted successfully',
           'success'
         );
+
+        if(this.endpoint){
+          this.requestService.deleteRecord(file);
+        }
         this.listFiles.pop();
-        this.closeModal('confirmation')
+        this.closeModal('confirmation');
+
       }, 200);
 
       // res.status(200).send("File has been deleted successfully");
@@ -478,6 +488,6 @@ export class CapFileUploadButtonComponent implements OnInit {
       Bucket: this.bucket,
       Key: `${file.name}`
     };
-    this.delete(params)
+    this.delete(params, file)
   }
 }

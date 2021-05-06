@@ -102,4 +102,26 @@ export class RequestService {
         retry(2),
       )
   }
+
+
+  async deleteRecord(file: any){
+    console.log('file: ', file);
+    
+    this.http.delete(`${this._config.endpoint}/${file.id}`).subscribe((response: any) => {
+      Swal.fire(
+        'Successful!',
+        'The file has been deleted.',
+        'success'
+      );
+      return response;
+    }, (error) => {
+      Swal.fire(
+        `${error.statusText}`,
+        `${error.error.error.message}`,
+        'error'
+      );
+      console.log('error: ', error);
+      return error;
+    });
+  }
 }
