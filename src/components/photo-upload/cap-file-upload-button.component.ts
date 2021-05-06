@@ -465,9 +465,7 @@ export class CapFileUploadButtonComponent implements OnInit {
           'success'
         );
 
-        if(this.endpoint){
-          this.requestService.deleteRecord(file);
-        }
+        this.requestService.deleteRecord(file);
         this.listFiles.pop();
         this.closeModal('confirmation');
 
