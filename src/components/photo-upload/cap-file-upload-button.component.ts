@@ -66,7 +66,7 @@ import Swal from 'sweetalert2';
     <button class="btn" (click)="closeModal('pdfPreview')">Close</button>
   </ngx-smart-modal>
 
-  <ngx-smart-modal #confirmation identifier="confirmation" class="modal">
+  <ngx-smart-modal #confirmation identifier="confirmation">
     <h4 class="heading-tertiary">Are you sure that you want to delete this file</h4>
     <div class="modal__content u-margin-bottom-medium u-margin-top-medium">
       <button class="btn" (click)="deleteFile(fileToRemove)">Yes</button>
