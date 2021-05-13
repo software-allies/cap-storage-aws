@@ -22,22 +22,24 @@ import Swal from 'sweetalert2';
         You don't have files saved
       </div>
 
-      <div *ngIf="listFiles.length > 0">
-        <div class="file__list" *ngFor="let file of listFiles | paginate: { itemsPerPage: 5, currentPage: p }" >
-          <div class="file__container">
-            <div class="file__info">
-              <div class="file-icon"><i class="bi bi-file-earmark-bar-graph"></i></div>
-              <label class="file__name">{{file.name}}</label>
-            </div>
-            <div class="file__options">
-              <button class="btn file__btn" (click)="showContent(file)"><i class="bi bi-eye" id="open-button"></i></button>
-              <a type="button" class="btn file__btn--link" href="{{ file.url }}" ><i class="bi bi-cloud-arrow-down-fill"></i></a>
-              <button class="btn file__btn" (click)="showConfirmation(file)"><i class="bi bi-trash"></i></button>
+      <div class="list-container">
+        <div *ngIf="listFiles.length > 0">
+          <div class="file__list" *ngFor="let file of listFiles | paginate: { itemsPerPage: 5, currentPage: p }" >
+            <div class="file__container">
+              <div class="file__info">
+                <div class="file-icon"><i class="bi bi-file-earmark-bar-graph"></i></div>
+                <label class="file__name">{{file.name}}</label>
+              </div>
+              <div class="file__options">
+                <button class="btn file__btn" (click)="showContent(file)"><i class="bi bi-eye" id="open-button"></i></button>
+                <a type="button" class="btn file__btn--link" href="{{ file.url }}" ><i class="bi bi-cloud-arrow-down-fill"></i></a>
+                <button class="btn file__btn" (click)="showConfirmation(file)"><i class="bi bi-trash"></i></button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="file__pagination">
-          <pagination-controls (pageChange)="p = $event"></pagination-controls>
+          <div class="file__pagination">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+          </div>
         </div>
       </div>
       <div class="upload__container">
@@ -77,152 +79,6 @@ import Swal from 'sweetalert2';
   `,
   styles: [
     `
-    .btn {
-      &,
-      &:link,
-      &:visited {
-        font-size: 1.5rem;
-        text-transform: uppercase;
-        text-decoration: none;
-        padding: 1rem 2.5rem;
-        display: inline-block;
-        transition: all 0.3s;
-        border-radius: 1rem;
-        position: relative;
-    
-        @include responsive(phone) {
-          font-size: 2rem;
-        }
-      }
-    
-      &:hover,
-      &:focus {
-        outline: none;
-        transform: translateY(-0.3rem);
-        box-shadow: 0 1rem 2rem rgba($color-black, $alpha: 0.2);
-      }
-      &:active {
-        transform: translateY(-0.1rem);
-        box-shadow: 0 0.5rem 1rem rgba($color-black, $alpha: 0.2);
-      }
-    }
-
-    .files-upload__container {
-      display: flex;
-      font-size: 1.8rem;
-      width: 50%;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-self: stretch;
-      margin: 0 1rem;
-    }
-    .file {
-      &__visor {
-        display: none;
-      }
-      &__list {
-        display: flex;
-        max-height: 25rem;
-        flex-direction: column;
-        &:not(:last-child) {
-          border-bottom: 0.2rem solid $color-gray;
-        }
-      }
-      &__icon {
-        margin: 0rem 2rem;
-      }
-      &__container {
-        display: inherit;
-        align-items: center;
-        justify-content: space-between;
-        &:hover {
-          background-image: linear-gradient(120deg, $color-gray-dark-transparent 0%, $color-white-light 100%);
-        }
-      }
-      &__pagination {
-        display: flex;
-        justify-content: center;
-        margin: 2rem 0;
-      }
-      &__info {
-        display: flex;
-        justify-content: space-between;
-        margin: 1rem 2rem;
-      }
-      &__name {
-        margin-left: 3rem;
-        max-width: 40rem;
-        min-width: 20rem;
-      }
-      &__options {
-        display: inherit;
-        justify-content: space-around;
-      }
-      &__btn {
-        font-size: 1.8rem;
-        margin: 0 0.5rem;
-        text-decoration: none;
-      }
-    
-      &__btn--link {
-        &:link,
-        &:visited {
-          font-size: 1.5rem;
-          text-transform: uppercase;
-          text-decoration: none;
-          padding: 1rem 2.5rem;
-          display: inline-block;
-          transition: all 0.3s;
-          border-radius: 1rem;
-          position: relative;
-    
-          @include responsive(phone) {
-            font-size: 2rem;
-          }
-        }
-    
-        &:hover,
-        &:focus {
-          outline: none;
-          transform: translateY(-0.3rem);
-          box-shadow: 0 1rem 2rem rgba($color-black, $alpha: 0.2);
-        }
-        &:active {
-          transform: translateY(-0.1rem);
-          box-shadow: 0 0.5rem 1rem rgba($color-black, $alpha: 0.2);
-        }
-      }
-      &__list--empty{
-        display: flex;
-        justify-content: center;
-        font-size: 1.8rem;
-      }
-    }
-    
-    .spinner{
-      font-size: 1.8rem;
-      margin-top: 1.5rem;
-      color: $color-white;
-    }
-    
-    .input__file {
-      display: none;
-    }
-    
-    .upload {
-      &__container {
-        display: flex;
-        justify-content: flex-end;
-      }
-      &__button {
-        position: relative;
-        text-align: center;
-        width: 30%;
-        color: $color-white;
-        background-image: linear-gradient(120deg, $color-primary-light 0%, $color-blue-transparent 100%);
-        cursor: pointer;
-      }
-    }
     `
   ]
 })
