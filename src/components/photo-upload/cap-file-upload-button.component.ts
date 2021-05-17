@@ -204,10 +204,11 @@ export class CapFileUploadButtonComponent implements OnInit {
 
     this.listFiles = list.map((element: any) => {
       let newElement: IAWSFileList = { name: '', url: '' };
-
+      console.log('newElement: ', newElement);
+      
       if (element[`${nameKey}`]) {
         newElement.name = element[`${nameKey}`]
-        newElement.Key = `${this.folder}/${nameKey}`
+        newElement.Key = `${this.folder}/${newElement.name}`
       }
 
       if (element[`${urlKey}`]) {
