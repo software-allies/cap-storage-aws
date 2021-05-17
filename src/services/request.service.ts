@@ -6,7 +6,6 @@ import Swal from 'sweetalert2';
 import { Observable } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 
-
 @Injectable({ providedIn: 'root' })
 export class RequestService {
 
@@ -23,22 +22,21 @@ export class RequestService {
 
   async createFileRecord(dataFile: any, fields: any, token?: any) {
     fields.forEach((field: any) => {
-      switch (field.association) {
+      switch (field.referenceTo) {
         case 'id':
-          this.dataPost[`${field.name}`] = uuidv4();
+          this.dataPost[`${field.propertyName}`] = uuidv4();
           break;
         case 'name':
-          this.dataPost[`${field.name}`] = dataFile.key.split('/')[1];
+          this.dataPost[`${field.propertyName}`] = dataFile.key.split('/')[1];
           break;
         case 'url':
-          this.dataPost[`${field.name}`] = dataFile.Location;
+          this.dataPost[`${field.propertyName}`] = dataFile.Location;
           break;
         default:
-          this.dataPost[`${field.name}`] = field.value;
+          this.dataPost[`${field.propertyName}`] = field.value;
           break;
       }
     });
-
     if (token !== '' || token !== null) {
       this.token = token;
       return await this.postRequest();

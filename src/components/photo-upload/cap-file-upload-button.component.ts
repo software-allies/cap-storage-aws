@@ -204,13 +204,11 @@ export class CapFileUploadButtonComponent implements OnInit {
 
     this.listFiles = list.map((element: any) => {
       let newElement: IAWSFileList = { name: '', url: '' };
-      console.log('newElement: ', newElement);
       
       if (element[`${nameKey}`]) {
         newElement.name = element[`${nameKey}`]
         newElement.Key = `${this.folder}/${newElement.name}`
       }
-
       if (element[`${urlKey}`]) {
         newElement.url = element[`${urlKey}`]
       }
@@ -261,7 +259,7 @@ export class CapFileUploadButtonComponent implements OnInit {
       }
       console.log('fileData: ', fileData);
       this.listFiles.push(fileData);
-      if (this.endpoint) await this.requestService.createFileRecord(data, this.fields, this.tokenRef);
+      if (this.endpoint) await this.requestService.createFileRecord(data, this.fieldsReference, this.tokenRef);
     }).on('httpUploadProgress', (progress: any) => {
 
       this.progressBar = Math.round((progress.loaded * 100) / progress.total);
@@ -307,7 +305,6 @@ export class CapFileUploadButtonComponent implements OnInit {
   }
 
   private delete(params: any, file: IAWSFileList) {
-
     this.bucketConfig.deleteObject(params, (error: any, data: any) => {
       if (error) {
         Swal.fire(
@@ -336,8 +333,7 @@ export class CapFileUploadButtonComponent implements OnInit {
 
   showConfirmation(file: IAWSFileList) {
     this.ngxSmartModalService.getModal('confirmation').open();
-    this.fileToRemove = file
-    console.log('file: ', file);
+    this.fileToRemove = { ...file }
   }
 
 
