@@ -207,7 +207,7 @@ export class CapFileUploadButtonComponent implements OnInit {
 
       if (element[`${nameKey}`]) {
         newElement.name = element[`${nameKey}`]
-        newElement.Key = element[`${this.folder}/${nameKey}`]
+        newElement.Key = `${this.folder}/${nameKey}`
       }
 
       if (element[`${urlKey}`]) {
@@ -252,9 +252,11 @@ export class CapFileUploadButtonComponent implements OnInit {
       }
 
       this.dataFile.emit(data);
+      console.log('data: ', data);
+      let name = data.key.split('/')[1];
       let fileData = {
         url: data.Location,
-        name: data.key,
+        name: name,
       }
       console.log('fileData: ', fileData);
       this.listFiles.push(fileData);
