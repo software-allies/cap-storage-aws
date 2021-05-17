@@ -207,6 +207,7 @@ export class CapFileUploadButtonComponent implements OnInit {
 
       if (element[`${nameKey}`]) {
         newElement.name = element[`${nameKey}`]
+        newElement.Key = element[`${this.folder}/${nameKey}`]
       }
 
       if (element[`${urlKey}`]) {
@@ -221,12 +222,10 @@ export class CapFileUploadButtonComponent implements OnInit {
   }
 
   private getFieldsFromApi(filter: object) {
-
     return this.requestService.getCapFilesByFilter(filter)
       .toPromise()
       .then((file: [any]) => file)
       .catch(error => [])
-
   }
 
   async upload() {
@@ -238,11 +237,11 @@ export class CapFileUploadButtonComponent implements OnInit {
       Body: file,
       ACL: 'public-read'
     };
+    console.log('params: ', params);
     this.uploadFilesToS3(params);
   }
 
   private uploadFilesToS3(params: any) {
-    console.log('this.endpoint: ', this.endpoint);
     this.bucketConfig.upload(params, async (err: any, data: any) => {
       if (err) {
         this.dataFileError.emit(err);
@@ -257,6 +256,7 @@ export class CapFileUploadButtonComponent implements OnInit {
         url: data.Location,
         name: data.key,
       }
+      console.log('fileData: ', fileData);
       this.listFiles.push(fileData);
       if (this.endpoint) await this.requestService.createFileRecord(data, this.fields, this.tokenRef);
     }).on('httpUploadProgress', (progress: any) => {
@@ -334,13 +334,15 @@ export class CapFileUploadButtonComponent implements OnInit {
   showConfirmation(file: IAWSFileList) {
     this.ngxSmartModalService.getModal('confirmation').open();
     this.fileToRemove = file
+    console.log('file: ', file);
   }
 
 
   deleteFile(file: IAWSFileList) {
+    console.log('file: ', file);
     const params = {
       Bucket: this.bucket,
-      Key: `${file.name}`
+      Key: `${file.Key}`
     };
     this.delete(params, file)
   }
