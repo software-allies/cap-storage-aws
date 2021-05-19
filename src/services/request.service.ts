@@ -4,8 +4,7 @@ import { ConfigService } from '../services/config-general.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { Observable } from 'rxjs';
-import { retry, catchError } from 'rxjs/operators';
-
+import { retry } from "rxjs/operators";
 @Injectable({ providedIn: 'root' })
 export class RequestService {
 
@@ -93,7 +92,7 @@ export class RequestService {
     });
   }
 
-  getCapFilesByFilter(filter: {}): Observable<Array<any>> {
+  getCapFilesByFilter( filter: {}): Observable<Array<any>> {
     let pathRequest = `${this._config.endpoint}?filter=${JSON.stringify(filter)}`;
     return this.http.get<[any]>(pathRequest, this.httpOptions)
       .pipe(
@@ -102,9 +101,7 @@ export class RequestService {
   }
 
 
-  async deleteRecord(file: any){
-    console.log('file: ', file);
-    
+  async deleteRecord(file: any) {
     this.http.delete(`${this._config.endpoint}/${file.id}`).subscribe((response: any) => {
       Swal.fire(
         'Successful!',

@@ -1,11 +1,14 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { IAWSFileList, IDbFields, ILocalStorage, IFilterBy, awsCredentials, IReferences, Ifilter } from '../../interfaces/interface';
+
 import * as S3 from 'aws-sdk/clients/s3';
-import { ConfigService } from '../../services/config-general.service';
 import { NgxSpinnerService } from "ngx-spinner";
+import Swal from 'sweetalert2';
+
+import { IAWSFileList, ILocalStorage, awsCredentials, IReferences, Ifilter } from '../../interfaces/interface';
+
+import { ConfigService } from '../../services/config-general.service';
 import { RequestService } from '../../services/request.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'cap-upload-button',
@@ -88,15 +91,12 @@ export class CapFileUploadButtonComponent implements OnInit {
   @Input() filesToAccept: string[] = [];
   @Input() fileUploaded?: string = 'upload';
   @Input() token: string = '';
-  @Input() fields: IDbFields[] = [];
   @Input() localStorageRef: ILocalStorage = {
     key: '',
     reference: ''
   };
   @Input() userID: string = 'null';
   @Input() queryFilters: Array<Ifilter> = [];
-
-  // It's going to recive the fields that are related with the name and the url of the file
   @Input() fieldsReference: IReferences[];
 
   // Outputs
@@ -111,20 +111,20 @@ export class CapFileUploadButtonComponent implements OnInit {
   private bucket: string = '';
   private folder: string = '';
   private endpoint?: string = '';
+
   tokenRef: string;
   fileToRemove: IAWSFileList;
   typeOfFiles: string = '.pdf, .xml, .doc, .jpg';
-
   fileURL: string = '';
   selectedFile: any;
   reader = new FileReader();
   progressBar: number = 0;
   listFiles: IAWSFileList[] = [];
-
   isAnImage: boolean = false;
-
   p: number = 1;
-  public loading = false;
+  loading = false;
+
+  // @Input() fields: IDbFields[] = [];
 
   constructor(
     private _config: ConfigService,
@@ -204,7 +204,7 @@ export class CapFileUploadButtonComponent implements OnInit {
 
     this.listFiles = list.map((element: any) => {
       let newElement: IAWSFileList = { name: '', url: '' };
-      
+
       if (element[`${nameKey}`]) {
         newElement.name = element[`${nameKey}`]
         newElement.Key = `${this.folder}/${newElement.name}`
@@ -212,7 +212,7 @@ export class CapFileUploadButtonComponent implements OnInit {
       if (element[`${urlKey}`]) {
         newElement.url = element[`${urlKey}`]
       }
-      
+
       if (element[`${id}`]) {
         newElement.id = element[`${id}`]
       }
@@ -258,7 +258,7 @@ export class CapFileUploadButtonComponent implements OnInit {
         name: name,
       }
       console.log('fileData: ', fileData);
-      this.listFiles.push(fileData);
+      this.listFiles.unshift(fileData);
       if (this.endpoint) await this.requestService.createFileRecord(data, this.fieldsReference, this.tokenRef);
     }).on('httpUploadProgress', (progress: any) => {
 
@@ -322,7 +322,7 @@ export class CapFileUploadButtonComponent implements OnInit {
         );
 
         this.requestService.deleteRecord(file);
-        this.listFiles.pop();
+        this.listFiles = this.listFiles.filter(element => element.id !== file.id)
         this.closeModal('confirmation');
 
       }, 200);
