@@ -71,5 +71,6 @@ export interface IFilterBy {
 
 export interface IReferences {
   propertyName: string,
-  referenceTo: string
+  referenceTo: string,
+  value?: string
 }
