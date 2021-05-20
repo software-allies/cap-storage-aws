@@ -19,7 +19,7 @@ export class RequestService {
   constructor(private http: HttpClient, private _config: ConfigService) { }
 
 
-  async createFileRecord(dataFile: any, fields: any, token?: any) {
+  createFileRecord(dataFile: any, fields: any, token?: any) {
     fields.forEach((field: any) => {
       switch (field.referenceTo) {
         case 'id':
@@ -38,7 +38,8 @@ export class RequestService {
     });
     if (token !== '' || token !== null) {
       this.token = token;
-      return await this.postRequest();
+      // let gg = await this.postRequest();
+      return this.postRequest();
     }
   }
 
@@ -49,22 +50,23 @@ export class RequestService {
         'Authorization': `Bearer ${this.token}`
       })
     };
-    this.http.post(`${this._config.endpoint}`, this.dataPost, httpOptions).subscribe((response: any) => {
-      Swal.fire(
-        'Successful!',
-        'The file has been saved.',
-        'success'
-      );
-      return response;
-    }, (error) => {
-      Swal.fire(
-        `${error.statusText}`,
-        `${error.error.error.message}`,
-        'error'
-      );
-      console.log('error: ', error);
-      return error;
-    });
+    return this.http.post(`${this._config.endpoint}`, this.dataPost, httpOptions)
+    // this.http.post(`${this._config.endpoint}`, this.dataPost, httpOptions).subscribe((response: any) => {
+    //   Swal.fire(
+    //     'Successful!',
+    //     'The file has been saved.',
+    //     'success'
+    //   );
+    //   console.log('response: ', response);
+    //   return response;
+    // }, (error) => {
+    //   Swal.fire(
+    //     `${error.statusText}`,
+    //     `${error.error.error.message}`,
+    //     'error'
+    //   );
+    //   return error;
+    // });
   }
 
   async getFilesRecords(filePath: string, userId: string) {

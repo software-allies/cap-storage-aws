@@ -251,15 +251,19 @@ export class CapFileUploadButtonComponent implements OnInit {
       }
 
       this.dataFile.emit(data);
-      console.log('data: ', data);
       let name = data.key.split('/')[1];
       let fileData = {
         url: data.Location,
         name: name,
+        Key: data.Key
       }
-      console.log('fileData: ', fileData);
-      this.listFiles.unshift(fileData);
-      if (this.endpoint) await this.requestService.createFileRecord(data, this.fieldsReference, this.tokenRef);
+      if (this.endpoint) {
+        this.requestService.createFileRecord(data, this.fieldsReference, this.tokenRef).subscribe((response: any) => {
+          console.log('response: ', response);
+          const { SACAP__UUID__c: id } = response
+          this.listFiles.unshift({ id, ...fileData });
+        });
+      }
     }).on('httpUploadProgress', (progress: any) => {
 
       this.progressBar = Math.round((progress.loaded * 100) / progress.total);
