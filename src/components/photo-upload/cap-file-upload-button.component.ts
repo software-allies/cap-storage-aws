@@ -252,13 +252,20 @@ export class CapFileUploadButtonComponent implements OnInit {
 
       this.dataFile.emit(data);
       let name = data.key.split('/')[1];
+      let currentDate = new Date();
+      const timeStamp = currentDate.getTime()
+
+      let nameElements = name.split('.')
+      name = `${nameElements[0]}-${timeStamp}.${nameElements[1]}`
       let fileData = {
         url: data.Location,
         name: name,
         Key: data.Key
       }
       if (this.endpoint) {
-        this.requestService.createFileRecord(data, this.fieldsReference, this.tokenRef).subscribe((response: any) => {
+        console.log('data: ', data);
+        
+        this.requestService.createFileRecord(data, this.fieldsReference, this.tokenRef, timeStamp).subscribe((response: any) => {
           console.log('response: ', response);
           const { SACAP__UUID__c: id } = response
           this.listFiles.unshift({ id, ...fileData });

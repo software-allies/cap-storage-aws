@@ -19,14 +19,17 @@ export class RequestService {
   constructor(private http: HttpClient, private _config: ConfigService) { }
 
 
-  createFileRecord(dataFile: any, fields: any, token?: any) {
+  createFileRecord(dataFile: any, fields: any, token?: any, timeStamp?: number) {
+    let auxName = timeStamp ? `-${timeStamp}` : ''
+    let nameFile = `${dataFile.key.split('/')[1]}`.split('.');
+    let name = `${nameFile[0]}${auxName}.${nameFile[1]}`
     fields.forEach((field: any) => {
       switch (field.referenceTo) {
         case 'id':
           this.dataPost[`${field.propertyName}`] = uuidv4();
           break;
         case 'name':
-          this.dataPost[`${field.propertyName}`] = dataFile.key.split('/')[1];
+          this.dataPost[`${field.propertyName}`] = name;
           break;
         case 'url':
           this.dataPost[`${field.propertyName}`] = dataFile.Location;
@@ -94,7 +97,7 @@ export class RequestService {
     });
   }
 
-  getCapFilesByFilter( filter: {}): Observable<Array<any>> {
+  getCapFilesByFilter(filter: {}): Observable<Array<any>> {
     let pathRequest = `${this._config.endpoint}?filter=${JSON.stringify(filter)}`;
     return this.http.get<[any]>(pathRequest, this.httpOptions)
       .pipe(
