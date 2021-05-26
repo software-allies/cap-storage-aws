@@ -9,6 +9,7 @@ import { IAWSFileList, ILocalStorage, awsCredentials, IReferences, Ifilter } fro
 import { ConfigService } from '../../services/config-general.service';
 import { RequestService } from '../../services/request.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { createVerify } from 'crypto';
 
 @Component({
   selector: 'cap-upload-button',
@@ -190,6 +191,7 @@ export class CapFileUploadButtonComponent implements OnInit {
 
   private async loadFilesToList(filters: Ifilter[], reference: IReferences[]) {
     const dbField = Object.assign({}, ...reference.map(object => ({ [object.propertyName]: object.referenceTo })));
+    console.log('dbField: ', dbField);
     let fileElements: any = await this.getFieldsFromApi({ where: { ...filters } })
 
     this.fillArrayList(fileElements, dbField);
@@ -204,7 +206,6 @@ export class CapFileUploadButtonComponent implements OnInit {
 
     this.listFiles = list.map((element: any) => {
       let newElement: IAWSFileList = { name: '', url: '' };
-
       if (element[`${nameKey}`]) {
         newElement.name = element[`${nameKey}`]
         newElement.Key = `${this.folder}/${newElement.name}`
@@ -230,17 +231,20 @@ export class CapFileUploadButtonComponent implements OnInit {
   async upload() {
     this.spinner.show();
     const file = this.selectedFile.item(0);
+    let fileData = file.name.split('.');
+
+    let currentDate = new Date();
+    const timeStamp = currentDate.getTime()
     const params = {
       Bucket: this.bucket,
-      Key: `${this.folder}/${file.name}`,
+      Key: `${this.folder}/${fileData[0]}-${timeStamp}.${fileData[1]}`,
       Body: file,
       ACL: 'public-read'
     };
-    console.log('params: ', params);
-    this.uploadFilesToS3(params);
+    this.uploadFilesToS3(params, timeStamp);
   }
 
-  private uploadFilesToS3(params: any) {
+  private uploadFilesToS3(params: any, timeStamp: number) {
     this.bucketConfig.upload(params, async (err: any, data: any) => {
       if (err) {
         this.dataFileError.emit(err);
@@ -252,23 +256,24 @@ export class CapFileUploadButtonComponent implements OnInit {
 
       this.dataFile.emit(data);
       let name = data.key.split('/')[1];
-      let currentDate = new Date();
-      const timeStamp = currentDate.getTime()
 
       let nameElements = name.split('.')
-      name = `${nameElements[0]}-${timeStamp}.${nameElements[1]}`
+      let auxName = nameElements[0].split('-');
+      name = `${auxName[0]}.${nameElements[1]}`
+      console.log('name: ', name);
       let fileData = {
         url: data.Location,
         name: name,
-        Key: data.Key
+        Key: data.Key,
       }
       if (this.endpoint) {
         console.log('data: ', data);
-        
-        this.requestService.createFileRecord(data, this.fieldsReference, this.tokenRef, timeStamp).subscribe((response: any) => {
+
+        this.requestService.createFileRecord(data, this.fieldsReference, this.tokenRef).subscribe((response: any) => {
           console.log('response: ', response);
           const { SACAP__UUID__c: id } = response
           this.listFiles.unshift({ id, ...fileData });
+          this.selectedFile = null;
         });
       }
     }).on('httpUploadProgress', (progress: any) => {
@@ -285,8 +290,21 @@ export class CapFileUploadButtonComponent implements OnInit {
   }
 
   selectFile(event: any) {
-    this.getCurrentFile(event);
-    this.upload()
+    console.log('event: ', event);
+    let shouldUploadFile = this.getCurrentFile(event);
+    shouldUploadFile ? this.upload() : Swal.fire(
+      `Error of type of file`,
+      `The type of file is not validate`,
+      'error'
+    );
+  }
+
+  selectFile2(event: any) {
+    let typeFile = event.target.files[0].type.split('/');
+    if (typeFile[0] === 'image' || typeFile[1] === 'pdf' || typeFile[1] === 'xml') {
+    } else {
+      // this.toastrService.error('It is not possible to upload files with this type of extension');
+    };
   }
 
   private getCurrentFile(event: any) {
@@ -296,7 +314,22 @@ export class CapFileUploadButtonComponent implements OnInit {
       image.src = event.target.result;
     }
     const f = event.target.files[0];
-    this.reader.readAsDataURL(f);
+    const auxF = event.target.files[0].type.split('/');
+
+    let validation = false;
+    this.filesToAccept.forEach(file => {
+      if (file === `.${auxF[0]}` || file === `.${auxF[1]}`) {
+        validation = true;
+      }
+    })
+
+    if (validation) {
+      this.reader.readAsDataURL(f);
+      return validation
+    } else {
+      return validation
+    }
+
   }
 
   showContent(file: any) {

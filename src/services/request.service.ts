@@ -19,17 +19,14 @@ export class RequestService {
   constructor(private http: HttpClient, private _config: ConfigService) { }
 
 
-  createFileRecord(dataFile: any, fields: any, token?: any, timeStamp?: number) {
-    let auxName = timeStamp ? `-${timeStamp}` : ''
-    let nameFile = `${dataFile.key.split('/')[1]}`.split('.');
-    let name = `${nameFile[0]}${auxName}.${nameFile[1]}`
+  createFileRecord(dataFile: any, fields: any, token?: any) {
     fields.forEach((field: any) => {
       switch (field.referenceTo) {
         case 'id':
           this.dataPost[`${field.propertyName}`] = uuidv4();
           break;
         case 'name':
-          this.dataPost[`${field.propertyName}`] = name;
+          this.dataPost[`${field.propertyName}`] = dataFile.Key.split('/')[1];
           break;
         case 'url':
           this.dataPost[`${field.propertyName}`] = dataFile.Location;
